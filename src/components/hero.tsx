@@ -1,10 +1,19 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
-import { MotionConfig, motion, type Variants } from "motion/react";
+import { useCallback, useState } from "react";
+
+import {
+  motion,
+  MotionConfig,
+  type Variants,
+} from "motion/react";
 import { ArrowRight, Download } from "lucide-react";
+
 import { useLanguage } from "@/components/language-provider";
+import ProfileCard from "@/components/ui/ProfileCard";
+import ScrollExpand from "@/components/ui/ScrollExpand";
+import ScrollVelocity from "@/components/ui/ScrollVelocity";
+import TextType from "@/components/ui/TextType";
 import { siteConfig } from "@/data/site";
 
 const container: Variants = {
@@ -20,13 +29,13 @@ const container: Variants = {
 const item: Variants = {
   hidden: {
     opacity: 0,
-    y: 16,
+    y: 18,
   },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.65,
       ease: "easeOut",
     },
   },
@@ -34,194 +43,259 @@ const item: Variants = {
 
 export function Hero() {
   const { t } = useLanguage();
-  const [imageFailed, setImageFailed] = useState(false);
+
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleExpand = useCallback(() => {
+    setIsExpanded(true);
+  }, []);
+
+  const firstLine = "Hello, I'm Kevin";
 
   return (
     <MotionConfig reducedMotion="user">
       <section
         id="home"
         aria-labelledby="hero-heading"
-        className="relative isolate flex min-h-svh flex-col overflow-hidden"
+        className="relative overflow-hidden"
       >
-        <div
-          aria-hidden
-          className="bg-dot-grid pointer-events-none absolute inset-0 -z-10"
-        />
+        {/* SCROLL EXPAND OPENING */}
 
-        <div className="mx-auto flex w-full max-w-6xl flex-1 items-center px-4 pb-6 pt-28 sm:px-6 lg:pt-24">
-          <div className="grid w-full items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
-            {/* Left: copy */}
-            <motion.div
-              variants={container}
-              initial="hidden"
-              animate="show"
-              className="flex flex-col items-start"
-            >
-              <motion.p
-                variants={item}
-                className="flex items-center gap-3 text-base text-muted-foreground"
-              >
-                <span
-                  aria-hidden
-                  className="h-px w-8 bg-linear-to-r from-blue-500 to-violet-500"
-                />
-                {t.hero.greeting}
-              </motion.p>
+        <ScrollExpand
+          title="Building ideas into digital experiences"
+          scrollHint="Scroll to explore"
+          startWidth={72}
+          startHeight={48}
+          startRadius={28}
+          endRadius={0}
+          scrollDistance={0.10}
+          smoothing={0.14}
+          enabled={true}
+          onExpand={handleExpand}
+        >
+          {/* FULL HERO */}
 
-              <motion.h1
-                id="hero-heading"
-                variants={item}
-                className="mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl"
-              >
-                <span className="block">Kevin Reynaldi</span>
+          <div className="relative flex h-full w-full items-center overflow-hidden">
+            {/* BACKGROUND */}
 
-                <span className="block bg-linear-to-r from-blue-600 to-violet-600 bg-clip-text pb-[0.12em] text-transparent dark:from-blue-400 dark:to-violet-400">
-                  Panjaitan
-                </span>
-              </motion.h1>
+            <div
+              aria-hidden
+              className="bg-dot-grid pointer-events-none absolute inset-0 -z-10 opacity-25"
+            />
 
-              <motion.p
-                variants={item}
-                className="mt-4 text-lg font-medium text-foreground/90 sm:text-xl"
-              >
-                {t.hero.role}
-              </motion.p>
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-[68%] top-[45%] -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/[0.035] blur-[150px]"
+            />
 
-              <motion.p
-                variants={item}
-                className="mt-4 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg"
-              >
-                {t.hero.description}
-              </motion.p>
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-[78%] top-[60%] -z-10 h-[350px] w-[350px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-500/[0.025] blur-[130px]"
+            />
 
-              {/* CTA */}
-              <motion.div
-                variants={item}
-                className="mt-8 flex flex-wrap items-center gap-3"
-              >
-                <motion.a
-                  href="#projects"
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="focus-ring group inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background"
+            {/* HERO CONTAINER */}
+
+            <div className="mx-auto flex w-full max-w-7xl items-center px-6 py-16 sm:px-8 lg:px-10">
+              <div className="grid w-full items-center gap-12 lg:grid-cols-[minmax(0,1fr)_440px] xl:grid-cols-[minmax(0,1fr)_500px] xl:gap-16">
+
+                {/* LEFT — TEXT */}
+
+                <motion.div
+                  variants={container}
+                  initial="hidden"
+                  animate={isExpanded ? "show" : "hidden"}
+                  className="flex min-w-0 flex-col items-start"
                 >
-                  {t.hero.viewProjects}
+                  {/* NAME */}
 
-                  <ArrowRight
-                    className="size-4 transition-transform group-hover:translate-x-0.5"
-                    aria-hidden
-                  />
-                </motion.a>
+                  <motion.div variants={item}>
+                    <h1
+                      id="hero-heading"
+                      className="text-4xl font-semibold leading-[1.04] tracking-tight sm:text-5xl lg:text-[58px] xl:text-[64px]"
+                    >
+                      {/* First line */}
 
-                <motion.a
-                  href={siteConfig.cvPath}
-                  download
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="focus-ring inline-flex h-11 items-center gap-2 rounded-full border border-border px-6 text-sm font-medium text-foreground transition-colors hover:border-violet-500/50"
+                      <span className="block whitespace-nowrap">
+                        {firstLine}
+                      </span>
+
+                      {/* Second line */}
+
+                      <span className="mt-2 block whitespace-nowrap">
+                        {isExpanded && (
+                          <TextType
+                            text="Reynaldi Panjaitan"
+                            as="span"
+                            typingSpeed={75}
+                            initialDelay={150}
+                            loop={false}
+                            showCursor={true}
+                            cursorCharacter="_"
+                            cursorBlink={true}
+                            cursorBlinkDuration={0.5}
+                            cursorClassName="text-type-cursor"
+                            className="block whitespace-nowrap"
+                          />
+                        )}
+                      </span>
+                    </h1>
+                  </motion.div>
+
+                  {/* ROLE */}
+
+                  <motion.p
+                    variants={item}
+                    className="mt-6 bg-linear-to-r from-blue-500 to-violet-500 bg-clip-text text-xl font-semibold text-transparent sm:text-2xl"
+                  >
+                    Full Stack Developer
+                  </motion.p>
+
+                  {/* DESCRIPTION */}
+
+                  <motion.p
+                    variants={item}
+                    className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
+                  >
+                    {t.hero.description}
+                  </motion.p>
+
+                  {/* CTA */}
+
+                  <motion.div
+                    variants={item}
+                    className="mt-8 flex flex-wrap items-center gap-3"
+                  >
+                    {/* View Projects */}
+
+                    <motion.a
+                      href="#projects"
+                      whileHover={{
+                        y: -2,
+                      }}
+                      whileTap={{
+                        scale: 0.98,
+                      }}
+                      className="focus-ring group inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-shadow hover:shadow-[0_8px_30px_rgba(255,255,255,0.08)]"
+                    >
+                      {t.hero.viewProjects}
+
+                      <ArrowRight
+                        className="size-4 transition-transform group-hover:translate-x-0.5"
+                        aria-hidden
+                      />
+                    </motion.a>
+
+                  </motion.div>
+
+                  {/* TECHNOLOGY AREAS */}
+
+                  <motion.div
+                    variants={item}
+                    className="mt-6 flex flex-wrap items-center gap-2"
+                  >
+                    {[
+                      "Web",
+                      "Mobile",
+                      "API",
+                      "Database",
+                    ].map((tech) => (
+                      <motion.span
+                        key={tech}
+                        whileHover={{
+                          y: -2,
+                        }}
+                        className="rounded-full border border-border/80 bg-background/40 px-3 py-1.5 font-mono text-[11px] text-muted-foreground backdrop-blur-sm transition-colors hover:border-blue-500/40 hover:text-foreground"
+                      >
+                        {tech}
+                      </motion.span>
+                    ))}
+                  </motion.div>
+                </motion.div>
+
+                {/* RIGHT — PROFILE CARD */}
+
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    x: 40,
+                    scale: 0.96,
+                  }}
+                  animate={
+                    isExpanded
+                      ? {
+                        opacity: 1,
+                        x: 0,
+                        scale: 1,
+                      }
+                      : {
+                        opacity: 0,
+                        x: 40,
+                        scale: 0.96,
+                      }
+                  }
+                  transition={{
+                    duration: 0.9,
+                    delay: 0.25,
+                    ease: "easeOut",
+                  }}
+                  className="relative mx-auto flex w-full max-w-[500px] justify-center"
                 >
-                  <Download className="size-4" aria-hidden />
-                  {t.hero.downloadCv}
-                </motion.a>
-              </motion.div>
-            </motion.div>
+                  {/* Blue glow */}
 
-            {/* Right: profile visual */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.25,
-                ease: "easeOut",
-              }}
-              className="relative mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md"
-            >
-              <div
-                aria-hidden
-                className="absolute -inset-8 -z-10 rounded-[3rem] bg-linear-to-br from-blue-500/15 via-transparent to-violet-500/15 blur-3xl"
-              />
-
-              <div
-                aria-hidden
-                className="absolute inset-0 translate-x-4 translate-y-4 rounded-3xl border border-blue-500/30 dark:border-violet-400/30"
-              />
-
-              <div className="relative aspect-4/5 overflow-hidden rounded-3xl border border-border bg-card">
-                {imageFailed ? (
                   <div
                     aria-hidden
-                    className="flex size-full items-center justify-center text-6xl font-semibold tracking-tight text-muted-foreground/40"
-                  >
-                    KRP
-                  </div>
-                ) : (
-                  <Image
-                    src={siteConfig.profileImage}
-                    alt={t.hero.profileAlt}
-                    fill
-                    priority
-                    sizes="(min-width: 1024px) 448px, (min-width: 640px) 384px, 320px"
-                    className="object-cover"
-                    onError={() => setImageFailed(true)}
+                    className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-600/[0.08] blur-[110px]"
                   />
-                )}
 
-                <div
-                  aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/40 to-transparent"
-                />
-              </div>
+                  {/* Violet glow */}
 
-              {/* Floating badge */}
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute -bottom-5 left-3 sm:-left-6"
-              >
-                <div className="flex items-center gap-2.5 rounded-full border border-border bg-background/90 px-4 py-2.5 text-sm font-medium shadow-lg backdrop-blur">
-                  <span
+                  <div
                     aria-hidden
-                    className="size-2 rounded-full bg-linear-to-r from-blue-500 to-violet-500"
+                    className="pointer-events-none absolute left-[58%] top-[55%] -z-10 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/[0.07] blur-[100px]"
                   />
 
-                  {t.hero.badge}
-                </div>
-              </motion.div>
-            </motion.div>
+                  <ProfileCard
+                    avatarUrl="/photo/potoaku.webp"
+                    miniAvatarUrl="/photo/potoaku.webp"
+                    iconUrl=""
+                    grainUrl=""
+                    innerGradient="linear-gradient(145deg, rgba(35, 45, 75, 0.95) 0%, rgba(15, 18, 35, 0.98) 100%)"
+                    behindGlowEnabled={true}
+                    behindGlowColor="rgba(80, 140, 255, 0.55)"
+                    behindGlowSize="55%"
+                    enableTilt={true}
+                    enableMobileTilt={false}
+                    mobileTiltSensitivity={5}
+                    name=""
+                    title=""
+                    handle="kevinpnjtn"
+                    status="Available to build"
+                    contactText=""
+                    showUserInfo={true}
+                    onContactClick={() => {
+                      window.location.href = `mailto:${siteConfig.email}`;
+                    }}
+                  />
+                </motion.div>
+              </div>
+            </div>
           </div>
-        </div>
+        </ScrollExpand>
 
-        {/* Scroll indicator */}
-        <div className="flex justify-center pb-8 pt-10">
-          <a
-            href="#about"
-            className="focus-ring flex flex-col items-center gap-2 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t.hero.scrollDown}
+        {/* SCROLL VELOCITY */}
 
-            <span
-              aria-hidden
-              className="flex h-8 w-5 justify-center rounded-full border border-current pt-1.5"
-            >
-              <motion.span
-                className="block h-1.5 w-0.5 rounded-full bg-current"
-                animate={{
-                  y: [0, 10, 0],
-                  opacity: [1, 0.2, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            </span>
-          </a>
+        <div className="relative pt-2 pb-3">
+          <ScrollVelocity
+            texts={[
+              "KEVIN REYNALDI PANJAITAN  FULL STACK DEVELOPER",
+              "FULL STACK DEVELOPER  KEVIN REYNALDI PANJAITAN",
+            ]}
+            velocity={35}
+            damping={50}
+            stiffness={400}
+            numCopies={6}
+            className="scroll-velocity-text"
+          />
         </div>
       </section>
     </MotionConfig>

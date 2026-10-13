@@ -2,14 +2,12 @@ export type Locale = "en" | "id";
 
 export const siteConfig = {
   name: "Kevin Reynaldi Panjaitan",
-  // Put these files in /public
-  cvPath: "/cv-kevin-reynaldi-panjaitan.pdf",
+  cvPath: "/cv/cv-kevin-reynaldi-panjaitan.pdf",
   profileImage: "/profile.jpg",
-  // TODO: replace with the real links
-  email: "your.email@example.com",
-  github: "https://github.com/your-username",
-  linkedin: "https://www.linkedin.com/in/your-username",
-  instagram: "https://www.instagram.com/your-username",
+  email: "kevinpanjaitan09@gmail.com",
+  github: "https://github.com/KevnPnjtn",
+  linkedin: "https://www.linkedin.com/in/kevin-reynaldi-panjaitan/",
+  instagram: "https://www.instagram.com/ray_pnjtn",
 };
 
 export const navIds = [
@@ -37,7 +35,7 @@ const en = {
   },
   hero: {
     greeting: "Hello, I'm a",
-    role: "Informatics Engineering Graduate",
+    role: "Full Stack Developer",
     description:
       "I build web and mobile applications with modern technologies to create practical digital solutions.",
     viewProjects: "View Projects",

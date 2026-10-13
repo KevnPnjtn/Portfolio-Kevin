@@ -22,7 +22,6 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Highlight the section currently in view (sections not built yet are skipped)
   useEffect(() => {
     const els = navIds
       .map((id) => document.getElementById(id))

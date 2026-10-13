@@ -1,0 +1,288 @@
+.scroll-expand {
+    position: relative;
+    width: 100%;
+    height: 112svh;
+    overflow: clip;
+}
+
+.scroll-expand__stage {
+    position: sticky;
+    top: 0;
+
+    width: 100%;
+    height: 100svh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.scroll-expand__frame {
+    position: relative;
+
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    max-height: 100%;
+
+    overflow: hidden;
+    isolation: isolate;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    background:
+        radial-gradient(circle at 70% 35%,
+            rgba(59, 130, 246, 0.12),
+            transparent 32%),
+        radial-gradient(circle at 80% 65%,
+            rgba(139, 92, 246, 0.1),
+            transparent 30%),
+        #08090c;
+
+    box-shadow:
+        0 0 80px rgba(59, 130, 246, 0.04),
+        0 0 120px rgba(139, 92, 246, 0.03);
+
+    transition:
+        border-radius 120ms linear,
+        width 120ms linear,
+        height 120ms linear;
+}
+
+/* =========================================
+   BACKGROUND
+========================================= */
+
+.scroll-expand__background {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        radial-gradient(rgba(255, 255, 255, 0.055) 1px,
+            transparent 1px);
+
+    background-size: 28px 28px;
+
+    opacity: 0.35;
+}
+
+/* =========================================
+   GLOWS
+========================================= */
+
+.scroll-expand__glow {
+    position: absolute;
+
+    pointer-events: none;
+
+    border-radius: 9999px;
+
+    filter: blur(100px);
+}
+
+.scroll-expand__glow--blue {
+    width: 420px;
+    height: 420px;
+
+    top: 15%;
+    right: 8%;
+
+    background: rgba(59, 130, 246, 0.07);
+}
+
+.scroll-expand__glow--violet {
+    width: 360px;
+    height: 360px;
+
+    bottom: 5%;
+    right: 20%;
+
+    background: rgba(139, 92, 246, 0.055);
+}
+
+/* =========================================
+   SCRIM
+========================================= */
+
+.scroll-expand__scrim {
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(180deg,
+            rgba(0, 0, 0, 0.15) 0%,
+            rgba(0, 0, 0, 0.2) 50%,
+            rgba(0, 0, 0, 0.5) 100%);
+
+    pointer-events: none;
+}
+
+/* =========================================
+   OPENING TITLE
+========================================= */
+
+.scroll-expand__title {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 2rem;
+    text-align: center;
+    pointer-events: none;
+}
+
+.scroll-expand__title span {
+    display: block;
+    max-width: min(900px, 88vw);
+
+    color: rgba(255, 255, 255, 0.94);
+    font-family: var(--font-geist), sans-serif;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+
+    text-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================
+   FULL HERO CONTENT
+========================================= */
+
+.scroll-expand__content {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    width: 100%;
+    height: 100%;
+
+    transform-origin: center;
+
+    transition:
+        opacity 100ms linear,
+        transform 100ms linear;
+}
+
+/*
+ * Children inside ScrollExpand should fill
+ * the complete Hero frame.
+ */
+
+.scroll-expand__content>* {
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================================
+   SCROLL HINT
+========================================= */
+
+.scroll-expand__hint {
+    position: absolute;
+
+    left: 50%;
+    bottom: 2rem;
+
+    z-index: 30;
+
+    display: flex;
+
+    transform: translateX(-50%);
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 0.65rem;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-family:
+        var(--font-geist-mono),
+        monospace;
+
+    font-size: 0.68rem;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+}
+
+.scroll-expand__hint-line {
+    display: block;
+
+    width: 1px;
+    height: 34px;
+
+    background:
+        linear-gradient(to bottom,
+            rgba(255, 255, 255, 0.6),
+            transparent);
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 767px) {
+    .scroll-expand {
+        height: 110svh;
+    }
+
+    .scroll-expand__title span {
+        max-width: 90vw;
+
+        font-size: clamp(1.9rem,
+                8vw,
+                3rem);
+
+        line-height: 1.08;
+    }
+
+    .scroll-expand__glow--blue {
+        width: 260px;
+        height: 260px;
+
+        top: 15%;
+        right: -10%;
+    }
+
+    .scroll-expand__glow--violet {
+        width: 220px;
+        height: 220px;
+
+        bottom: 10%;
+        right: 5%;
+    }
+
+    .scroll-expand__hint {
+        bottom: 1.5rem;
+    }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .scroll-expand__frame,
+    .scroll-expand__content {
+        transition: none;
+    }
+}

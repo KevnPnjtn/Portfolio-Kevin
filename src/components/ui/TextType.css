@@ -1,0 +1,47 @@
+.text-type {
+    display: inline-block;
+    white-space: pre-wrap;
+}
+
+.text-type__content {
+    display: inline;
+}
+
+.text-type__cursor {
+    margin-left: 0.25rem;
+    display: inline-block;
+    user-select: none;
+}
+
+.text-type__cursor--hidden {
+    display: none;
+}
+
+.text-type__cursor--blink {
+    animation-name: text-type-blink;
+    animation-duration: 1s;
+    animation-timing-function: step-end;
+    animation-iteration-count: infinite;
+}
+
+@keyframes text-type-blink {
+    0%,
+    100% {
+        visibility: visible;
+    }
+    50% {
+        visibility: hidden;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .text-type__cursor--blink {
+        animation: none;
+    }
+}
+
+
+.text-type-cursor {
+    color: var(--text-type-cursor-color, rgb(255, 255, 255));
+    -webkit-text-fill-color: var(--text-type-cursor-color, rgb(255, 255, 255));
+}
