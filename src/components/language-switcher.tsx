@@ -1,44 +1,27 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import type { Locale } from "@/data/site";
+import { Languages } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
-
-const OPTIONS: { value: Locale; label: string; name: string }[] = [
-  { value: "id", label: "ID", name: "Bahasa Indonesia" },
-  { value: "en", label: "EN", name: "English" },
-];
 
 export function LanguageSwitcher() {
   const { locale, setLocale, t } = useLanguage();
 
+  const nextLocale = locale === "en" ? "id" : "en";
+
   return (
-    <div
-      role="group"
-      aria-label={t.ui.language}
-      className="inline-flex h-9 items-center rounded-full border border-border p-0.5 text-xs font-medium"
+    <button
+      type="button"
+      lang={locale}
+      aria-label={`${t.ui.language}: ${locale.toUpperCase()}. Switch to ${nextLocale.toUpperCase()}`}
+      title={t.ui.language}
+      onClick={() => setLocale(nextLocale)}
+      className="group relative flex size-10 items-center justify-center rounded-xl text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
     >
-      {OPTIONS.map((opt) => {
-        const active = locale === opt.value;
-        return (
-          <button
-            key={opt.value}
-            type="button"
-            lang={opt.value}
-            aria-label={opt.name}
-            aria-pressed={active}
-            onClick={() => setLocale(opt.value)}
-            className={cn(
-              "focus-ring h-full rounded-full px-2.5 transition-colors",
-              active
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            {opt.label}
-          </button>
-        );
-      })}
-    </div>
+      {locale.toUpperCase()}
+
+      <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+        {t.ui.language}
+      </span>
+    </button>
   );
 }

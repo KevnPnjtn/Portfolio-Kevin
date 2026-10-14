@@ -11,19 +11,21 @@ export const siteConfig = {
 };
 
 export const navIds = [
+  "home",
+  "about",
+  "skills",
+  "projects",
 ] as const;
 
 export type SectionId = (typeof navIds)[number];
+
 
 const en = {
   nav: {
     home: "Home",
     about: "About",
     skills: "Skills",
-    experience: "Experience",
     projects: "Projects",
-    education: "Education",
-    contact: "Contact",
   } satisfies Record<SectionId, string>,
   ui: {
     toggleTheme: "Toggle theme",
@@ -54,10 +56,7 @@ const id: Dictionary = {
     home: "Beranda",
     about: "Tentang",
     skills: "Keahlian",
-    experience: "Pengalaman",
     projects: "Proyek",
-    education: "Pendidikan",
-    contact: "Kontak",
   },
   ui: {
     toggleTheme: "Ganti tema",

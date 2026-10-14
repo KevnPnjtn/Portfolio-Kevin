@@ -1,149 +1,121 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { MotionConfig, motion } from "motion/react";
+import {
+  House,
+  UserRound,
+  Layers3,
+  FolderKanban,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { navIds, type SectionId } from "@/data/site";
 import { useLanguage } from "@/components/language-provider";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { ThemeToggle } from "@/components/theme-toggle";
+
+const navItems = [
+  { id: "home", icon: House },
+  { id: "about", icon: UserRound },
+  { id: "skills", icon: Layers3 },
+  { id: "projects", icon: FolderKanban },
+] satisfies {
+  id: SectionId;
+  icon: typeof House;
+}[];
 
 export function Navbar() {
   const { t } = useLanguage();
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<SectionId>("home");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const els = navIds
+    const sections = navIds
       .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-    if (els.length === 0) return;
+      .filter((element): element is HTMLElement => element !== null);
+
+    if (!sections.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActive(entry.target.id as SectionId);
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (a, b) => b.intersectionRatio - a.intersectionRatio,
+          );
+
+        if (visible[0]) {
+          setActive(visible[0].target.id as SectionId);
         }
       },
-      { rootMargin: "-45% 0px -50% 0px" },
+      {
+        rootMargin: "-15% 0px -15% 0px",
+        threshold: [0.1, 0.25, 0.5],
+      },
     );
-    els.forEach((el) => observer.observe(el));
+
+    sections.forEach((section) => observer.observe(section));
+
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
-
   return (
     <MotionConfig reducedMotion="user">
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300",
-          scrolled || open
-            ? "border-border bg-background/80 backdrop-blur-md"
-            : "border-transparent bg-transparent",
-        )}
+      <motion.aside
+        initial={{ opacity: 0, x: 16 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.35 }}
+        className="fixed right-4 top-1/2 z-50 -translate-y-1/2 sm:right-6"
       >
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
-          <a
-            href="#home"
-            aria-label="Kevin, back to top"
-            className="focus-ring rounded-md text-lg font-semibold tracking-tight"
-          >
-            Kevin
-            <span className="bg-linear-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent">
-              .
-            </span>
-          </a>
+        <nav
+          aria-label={t.ui.mainNav}
+          className="flex flex-col items-center rounded-2xl border border-border/80 bg-background/80 p-2 shadow-xl shadow-black/10 backdrop-blur-xl"
+        >
+          <div className="flex flex-col items-center gap-1">
+            {navItems.map(({ id, icon: Icon }) => {
+              const isActive = active === id;
 
-          <nav aria-label={t.ui.mainNav} className="hidden lg:block">
-            <ul className="flex items-center gap-1">
-              {navIds.map((id) => (
-                <li key={id}>
-                  <a
-                    href={`#${id}`}
-                    aria-current={active === id ? "true" : undefined}
-                    className={cn(
-                      "focus-ring rounded-full px-3 py-1.5 text-sm transition-colors",
-                      active === id
-                        ? "text-foreground"
-                        : "text-muted-foreground hover:text-foreground",
-                    )}
-                  >
+              return (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  aria-label={t.nav[id]}
+                  aria-current={isActive ? "location" : undefined}
+                  title={t.nav[id]}
+                  className={cn(
+                    "group relative flex size-10 items-center justify-center rounded-xl transition-colors duration-200",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                    isActive
+                      ? "bg-blue-500/15 text-blue-500"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  )}
+                >
+                  <Icon className="size-[18px]" aria-hidden="true" />
+
+                  {isActive && (
+                    <motion.span
+                      layoutId="active-nav-indicator"
+                      className="absolute -left-[9px] h-5 w-0.5 rounded-full bg-blue-500"
+                      transition={{
+                        type: "spring",
+                        stiffness: 350,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+
+                  <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                     {t.nav[id]}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="flex items-center gap-2 lg:justify-self-end">
-            <LanguageSwitcher />
-            <ThemeToggle />
-            <button
-              type="button"
-              onClick={() => setOpen((v) => !v)}
-              aria-expanded={open}
-              aria-controls="mobile-menu"
-              aria-label={open ? t.ui.closeMenu : t.ui.openMenu}
-              className="focus-ring inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:text-foreground lg:hidden"
-            >
-              {open ? (
-                <X className="size-4" aria-hidden />
-              ) : (
-                <Menu className="size-4" aria-hidden />
-              )}
-            </button>
+                  </span>
+                </a>
+              );
+            })}
           </div>
-        </div>
 
-        <AnimatePresence>
-          {open && (
-            <motion.nav
-              id="mobile-menu"
-              aria-label={t.ui.mainNav}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              className="border-t border-border lg:hidden"
-            >
-              <ul className="mx-auto flex max-w-6xl flex-col px-4 py-3 sm:px-6">
-                {navIds.map((id) => (
-                  <li key={id}>
-                    <a
-                      href={`#${id}`}
-                      onClick={() => setOpen(false)}
-                      aria-current={active === id ? "true" : undefined}
-                      className={cn(
-                        "focus-ring block rounded-md px-2 py-3 text-base transition-colors",
-                        active === id
-                          ? "text-foreground"
-                          : "text-muted-foreground hover:text-foreground",
-                      )}
-                    >
-                      {t.nav[id]}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </motion.nav>
-          )}
-        </AnimatePresence>
-      </header>
+          <div className="my-2 h-px w-full bg-border" />
+
+          <LanguageSwitcher />
+        </nav>
+      </motion.aside>
     </MotionConfig>
   );
 }
