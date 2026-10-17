@@ -47,6 +47,21 @@ const en = {
     profileAlt: "Portrait of Kevin Reynaldi Panjaitan",
     socialLabel: "Social links",
   },
+  skills: {
+    eyebrow: "Tech stack",
+    title: "Skills &",
+    titleAccent: "Technologies",
+    description:
+      "I use a range of technologies to build web and mobile applications, from the interface people see to the API and database behind it.",
+    highlightNote: "Highlighted: the technologies I use most.",
+    categories: {
+      languages: "Programming Languages",
+      frontend: "Frontend & Mobile",
+      backend: "Backend & API",
+      database: "Database",
+      tools: "Tools & Workflow",
+    },
+  },
 };
 
 export type Dictionary = typeof en;
@@ -77,6 +92,21 @@ const id: Dictionary = {
     scrollDown: "Gulir ke Bawah",
     profileAlt: "Potret Kevin Reynaldi Panjaitan",
     socialLabel: "Tautan sosial",
+  },
+  skills: {
+    eyebrow: "Tech stack",
+    title: "Skills &",
+    titleAccent: "Teknologi",
+    description:
+      "Saya menggunakan berbagai teknologi untuk membangun aplikasi web dan mobile, mulai dari antarmuka yang dilihat pengguna hingga API dan database di baliknya.",
+    highlightNote: "Disorot: teknologi yang paling sering saya gunakan.",
+    categories: {
+      languages: "Bahasa Pemrograman",
+      frontend: "Frontend & Mobile",
+      backend: "Backend & API",
+      database: "Database",
+      tools: "Tools & Alur Kerja",
+    },
   },
 };
 

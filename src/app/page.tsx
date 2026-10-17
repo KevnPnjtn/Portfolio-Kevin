@@ -3,6 +3,8 @@ import { Hero } from "@/components/hero";
 import { Footer } from "@/components/footer";
 import { Loader } from "@/components/loader";
 import { About } from "@/components/about";
+import { Skills } from "@/components/skills";
+import { Projects } from "@/components/projects";
 
 export default function Home() {
     return (
@@ -31,6 +33,8 @@ export default function Home() {
                 <div className="relative z-10">
                     <Hero />
                     <About />
+                    <Skills />
+                    <Projects />
                 </div>
             </main>
 
