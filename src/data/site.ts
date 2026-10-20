@@ -6,7 +6,7 @@ export const siteConfig = {
   profileImage: "/profile.jpg",
   email: "kevinpanjaitan09@gmail.com",
   github: "https://github.com/KevnPnjtn",
-  linkedin: "https://www.linkedin.com/in/kevin-reynaldi-panjaitan/",
+  linkedin: "https://www.linkedin.com/in/kevinnreynaldi/",
   instagram: "https://www.instagram.com/ray_pnjtn",
 };
 

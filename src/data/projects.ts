@@ -20,7 +20,49 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    id: "guide-me",
+    id: "webkita",
+    title: "WEBKITA",
+    category: "Web Application",
+    shortDescription:
+      "A digital service platform with rule-based budget estimation for UMKM.",
+    description:
+      "WEBKITA features a rule-based budget calculator that estimates digital service costs based on user-selected requirements.",
+    role: "Project team member",
+    images:
+      [
+        "/projects/webkita/hero-webkita.png",
+        "/projects/webkita/webkita-1.png",
+        "/projects/webkita/webkita-2.png",
+        "/projects/webkita/webkita-3.png",
+      ],
+    techStack: ["React", "TypeScript", "Supabase", "REST API"],
+    features: [
+      "Rule-based budget estimation",
+      "Service package and feature selection",
+      "Client order and payment workflow",
+      "Admin package and order management",
+    ],
+
+  },
+  {
+    id: "inventori",
+    title: "Warehouse Management System",
+    category: "Web Application",
+    shortDescription: "Replace this with your actual project summary.",
+    description: "Add the actual project description here.",
+    role: "Add your actual role and contributions.",
+    images: [
+      "/projects/inventori/inventori-1.png",
+      "/projects/inventori/inventori-2.png",
+      "/projects/inventori/inventori-3.png",
+      "/projects/inventori/inventori-4.png",
+      "/projects/inventori/inventori-5.png",
+    ],
+    techStack: [],
+    features: [],
+  },
+  {
+    id: "guideme-mobile",
     title: "Guide Me",
     category: "Mobile Application",
     shortDescription:
@@ -29,7 +71,7 @@ export const projects: Project[] = [
       "Guide Me is a tourism application designed to help users explore destinations, discover tourism events, browse galleries, and order tickets online.",
     role: "Project team member",
     images: [
-      "/images/projects/guide-me/cover.png",
+      "/images/projects/guideme-mobile/cover.png",
       // Add more screenshot paths here.
     ],
     techStack: ["Flutter", "Dart", "Firebase", "Cloud Firestore"],
@@ -39,35 +81,6 @@ export const projects: Project[] = [
       "Online ticket ordering",
       "Firebase-based application services",
     ],
-  },
-  {
-    id: "webkita",
-    title: "WEBKITA",
-    category: "Web Application",
-    shortDescription:
-      "A digital service platform with rule-based budget estimation for UMKM.",
-    description:
-      "WEBKITA features a rule-based budget calculator that estimates digital service costs based on user-selected requirements.",
-    role: "Project team member",
-    images: ["/images/projects/webkita/cover.png"],
-    techStack: ["React", "TypeScript", "Supabase", "REST API"],
-    features: [
-      "Rule-based budget estimation",
-      "Service package and feature selection",
-      "Client order and payment workflow",
-      "Admin package and order management",
-    ],
-  },
-  {
-    id: "project-3",
-    title: "Project Three",
-    category: "Web Application",
-    shortDescription: "Replace this with your actual project summary.",
-    description: "Add the actual project description here.",
-    role: "Add your actual role and contributions.",
-    images: [],
-    techStack: [],
-    features: [],
   },
   {
     id: "project-4",

@@ -24,12 +24,15 @@ import { portfolioContent } from "@/data/portfolio-content";
 
 const INITIAL_PROJECTS = 6;
 
+
 function ProjectPreview({
     src,
     title,
+    sizes = "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw",
 }: {
     src?: string;
     title: string;
+    sizes?: string;
 }) {
     const [imageFailed, setImageFailed] = useState(false);
 
@@ -55,12 +58,13 @@ function ProjectPreview({
             src={src}
             alt={`${title} screenshot`}
             fill
-            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
-            className="object-cover"
+            sizes={sizes}
+            className="object-contain"
             onError={() => setImageFailed(true)}
         />
     );
 }
+
 
 const content = portfolioContent.projects;
 
@@ -136,8 +140,7 @@ function ProjectModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="project-dialog-title"
-                className="relative flex max-h-[92dvh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b10] shadow-2xl shadow-black/50 sm:rounded-3xl"
-                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                className="relative flex max-h-[94dvh] w-full max-w-[1500px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b10] shadow-2xl shadow-black/50 sm:rounded-3xl" initial={{ opacity: 0, y: 20, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 12, scale: 0.98 }}
                 transition={{ duration: 0.22 }}
@@ -163,12 +166,13 @@ function ProjectModal({
                 </div>
 
                 <div className="min-h-0 flex-1 overflow-y-auto">
-                    <div className="grid md:grid-cols-[1.1fr_0.9fr]">
+                    <div className="grid md:grid-cols-[1.2fr_0.8fr]">
                         <div className="border-b border-white/10 p-4 sm:p-6 md:border-r md:border-b-0">
                             <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-[#111118] sm:rounded-2xl">
                                 <ProjectPreview
                                     src={images[activeImage]}
                                     title={project.title}
+                                    sizes="(max-width: 767px) 100vw, (max-width: 1499px) 60vw, 900px"
                                 />
 
                                 {images.length > 1 && (
@@ -211,11 +215,16 @@ function ProjectModal({
                                             aria-label={`Show screenshot ${index + 1}`}
                                             aria-pressed={activeImage === index}
                                             className={`relative size-16 shrink-0 cursor-pointer overflow-hidden rounded-lg border bg-white/5 sm:size-20 ${activeImage === index
-                                                    ? "border-blue-400"
-                                                    : "border-white/10 opacity-60 hover:opacity-100"
+                                                ? "border-blue-400"
+                                                : "border-white/10 opacity-60 hover:opacity-100"
                                                 }`}
                                         >
-                                            <ProjectPreview src={src} title={project.title} />
+                                            <ProjectPreview
+                                                src={src}
+                                                title={project.title}
+                                                sizes="80px"
+                                            />
+
                                         </button>
                                     ))}
                                 </div>
