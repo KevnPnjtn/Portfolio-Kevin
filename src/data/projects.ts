@@ -62,7 +62,7 @@ export const projects: Project[] = [
     features: [],
   },
   {
-    id: "guideme-mobile",
+    id: "guideme",
     title: "Guide Me",
     category: "Mobile Application",
     shortDescription:
@@ -71,8 +71,10 @@ export const projects: Project[] = [
       "Guide Me is a tourism application designed to help users explore destinations, discover tourism events, browse galleries, and order tickets online.",
     role: "Project team member",
     images: [
-      "/images/projects/guideme-mobile/cover.png",
-      // Add more screenshot paths here.
+      "/projects/guideme/guideme-home.webp",
+      "/projects/guideme/guideme-2.webp",
+      "/projects/guideme/guideme-3.webp",
+      "/projects/guideme/guideme-4.webp",
     ],
     techStack: ["Flutter", "Dart", "Firebase", "Cloud Firestore"],
     features: [
