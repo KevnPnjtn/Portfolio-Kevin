@@ -75,6 +75,7 @@ export const projects: Project[] = [
       "/projects/guideme/guideme-2.webp",
       "/projects/guideme/guideme-3.webp",
       "/projects/guideme/guideme-4.webp",
+      "/projects/guideme/guideme-5.webp",
     ],
     techStack: ["Flutter", "Dart", "Firebase", "Cloud Firestore"],
     features: [
@@ -85,13 +86,20 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "project-4",
-    title: "Project Four",
+    id: "microlearning",
+    title: "MicroLearning",
     category: "Mobile Application",
-    shortDescription: "Replace this with your actual project summary.",
-    description: "Add the actual project description here.",
-    role: "Add your actual role and contributions.",
-    images: [],
+    shortDescription: "A mobile application for delivering bite-sized learning modules.",
+    description: "MicroLearning is a mobile application designed to provide users with quick, focused learning experiences through short, interactive modules.",
+    role: "Project team member",
+    images: [
+    "/projects/microlearning/microlearning-1.webp",
+    "/projects/microlearning/microlearning-2.webp",
+    "/projects/microlearning/microlearning-3.webp",
+    "/projects/microlearning/microlearning-4.webp",
+    "/projects/microlearning/microlearning-5.webp"
+
+    ],
     techStack: [],
     features: [],
   },
