@@ -1,17 +1,13 @@
-
 "use client";
 
 import Image from "next/image";
-import {
-    useCallback,
-    useEffect,
-    useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
     ArrowLeft,
     ArrowRight,
     ArrowUpRight,
+    Award,
     Check,
     ExternalLink,
     FolderOpen,
@@ -19,11 +15,16 @@ import {
 } from "lucide-react";
 
 import { projects, type Project } from "@/data/projects";
+import { certificates, type Certificate } from "@/data/certificates";
 import { portfolioContent } from "@/data/portfolio-content";
 
+const INITIAL_ITEMS = 6;
+const ITEMS_PER_LOAD = 6;
 
-const INITIAL_PROJECTS = 6;
-
+type ActiveFilter = "all" | "projects" | "certificates";
+type PortfolioItem =
+    | { type: "project"; id: string; data: Project }
+    | { type: "certificate"; id: string; data: Certificate };
 
 function ProjectPreview({
     src,
@@ -65,23 +66,14 @@ function ProjectPreview({
     );
 }
 
-
-const content = portfolioContent.projects;
-
 function ProjectModal({
     project,
     onClose,
-    onPrevious,
-    onNext,
 }: {
     project: Project;
     onClose: () => void;
-    onPrevious: () => void;
-    onNext: () => void;
 }) {
-    const images = project.images.length
-        ? project.images
-        : [""];
+    const images = project.images.length ? project.images : [""];
     const [activeImage, setActiveImage] = useState(0);
 
     useEffect(() => {
@@ -98,16 +90,19 @@ function ProjectModal({
 
     const handleKeyDown = useCallback(
         (event: KeyboardEvent) => {
-            if (event.key === "Escape") onClose();
+            if (event.key === "Escape") {
+                onClose();
+            }
+
             if (event.key === "ArrowLeft") {
-                setActiveImage((current) =>
-                    (current - 1 + images.length) % images.length,
+                setActiveImage(
+                    (current) =>
+                        (current - 1 + images.length) % images.length,
                 );
             }
+
             if (event.key === "ArrowRight") {
-                setActiveImage((current) =>
-                    (current + 1) % images.length,
-                );
+                setActiveImage((current) => (current + 1) % images.length);
             }
         },
         [images.length, onClose],
@@ -115,7 +110,10 @@ function ProjectModal({
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
     }, [handleKeyDown]);
 
     const changeImage = (direction: -1 | 1) => {
@@ -140,7 +138,8 @@ function ProjectModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="project-dialog-title"
-                className="relative flex max-h-[94dvh] w-full max-w-[1500px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b10] shadow-2xl shadow-black/50 sm:rounded-3xl" initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                className="relative flex max-h-[94dvh] w-full max-w-[1500px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b10] shadow-2xl shadow-black/50 sm:rounded-3xl"
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 12, scale: 0.98 }}
                 transition={{ duration: 0.22 }}
@@ -215,8 +214,8 @@ function ProjectModal({
                                             aria-label={`Show screenshot ${index + 1}`}
                                             aria-pressed={activeImage === index}
                                             className={`relative size-16 shrink-0 cursor-pointer overflow-hidden rounded-lg border bg-white/5 sm:size-20 ${activeImage === index
-                                                ? "border-blue-400"
-                                                : "border-white/10 opacity-60 hover:opacity-100"
+                                                    ? "border-blue-400"
+                                                    : "border-white/10 opacity-60 hover:opacity-100"
                                                 }`}
                                         >
                                             <ProjectPreview
@@ -224,14 +223,14 @@ function ProjectModal({
                                                 title={project.title}
                                                 sizes="80px"
                                             />
-
                                         </button>
                                     ))}
                                 </div>
                             )}
 
                             <p className="mt-4 text-xs text-white/35">
-                                Use the arrows or keyboard arrow keys to browse screenshots.
+                                Use the arrows or keyboard arrow keys to browse
+                                screenshots.
                             </p>
                         </div>
 
@@ -324,14 +323,253 @@ function ProjectModal({
     );
 }
 
+function CertificatePreview({
+    src,
+    title,
+    sizes = "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw",
+}: {
+    src?: string;
+    title: string;
+    sizes?: string;
+}) {
+    const [imageFailed, setImageFailed] = useState(false);
+
+    if (!src || imageFailed) {
+        return (
+            <div
+                role="img"
+                aria-label={`${title} certificate image placeholder`}
+                className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-violet-500/15 via-blue-500/10 to-[#101016]"
+            >
+                <div className="flex flex-col items-center gap-3 text-white/35">
+                    <Award size={34} strokeWidth={1.25} />
+                    <span className="text-[10px] uppercase tracking-[0.22em]">
+                        Certificate Preview
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <Image
+            src={src}
+            alt={`Certificate: ${title}`}
+            fill
+            sizes={sizes}
+            className="object-contain"
+            onError={() => setImageFailed(true)}
+        />
+    );
+}
+
+function CertificateModal({
+    certificate,
+    onClose,
+}: {
+    certificate: Certificate;
+    onClose: () => void;
+}) {
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") onClose();
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [onClose]);
+
+    return (
+        <motion.div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-3 backdrop-blur-md sm:p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onMouseDown={(event) => {
+                if (event.target === event.currentTarget) onClose();
+            }}
+        >
+            <motion.section
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="certificate-dialog-title"
+                className="relative flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#121214] shadow-2xl sm:rounded-3xl"
+                initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 12, scale: 0.98 }}
+                transition={{ duration: 0.22 }}
+            >
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Close certificate details"
+                    className="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black"
+                >
+                    <X size={18} />
+                </button>
+
+                <div className="relative shrink-0 border-b border-white/10 bg-[#0b0b0d]">
+                    <div className="relative aspect-[16/10] w-full sm:aspect-[16/9]">
+                        <CertificatePreview
+                            src={certificate.image}
+                            title={certificate.title}
+                            sizes="(max-width: 768px) 100vw, 768px"
+                        />
+                    </div>
+                </div>
+
+                <div className="overflow-y-auto p-5 sm:p-7">
+                    <div className="mb-4 flex flex-wrap items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-black">
+                            <Award size={13} />
+                            Sertifikat
+                        </span>
+
+                        <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/75">
+                            {certificate.category}
+                        </span>
+
+                        {certificate.period && (
+                            <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/75">
+                                {certificate.period}
+                            </span>
+                        )}
+                    </div>
+
+                    <h3
+                        id="certificate-dialog-title"
+                        className="text-2xl font-semibold tracking-tight text-white sm:text-3xl"
+                    >
+                        {certificate.title}
+                    </h3>
+
+                    <p className="mt-2 text-sm text-blue-400">
+                        {certificate.issuer}
+                    </p>
+
+                    <p className="mt-4 text-sm leading-7 text-white/75 sm:text-base">
+                        {certificate.description}
+                    </p>
+
+                    {certificate.learnings.length > 0 && (
+                        <div className="mt-7">
+                            <h4 className="text-sm font-semibold uppercase tracking-wide text-white/55">
+                                Yang Dipelajari
+                            </h4>
+
+                            <ul className="mt-3 space-y-2.5">
+                                {certificate.learnings.map((learning) => (
+                                    <li
+                                        key={learning}
+                                        className="flex items-start gap-3 text-sm leading-6 text-white/75"
+                                    >
+                                        <Check
+                                            size={16}
+                                            className="mt-1 shrink-0 text-blue-400"
+                                        />
+                                        <span>{learning}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {certificate.skills.length > 0 && (
+                        <div className="mt-7">
+                            <h4 className="text-sm font-semibold uppercase tracking-wide text-white/55">
+                                Topik
+                            </h4>
+
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                {certificate.skills.map((skill) => (
+                                    <span
+                                        key={skill}
+                                        className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/80"
+                                    >
+                                        <span aria-hidden="true">‹›</span>
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </motion.section>
+        </motion.div>
+    );
+}
+
+
+/* --------------------------------------------------
+   PROJECTS & CERTIFICATES SECTION
+-------------------------------------------------- */
+
 export function Projects() {
-    const [visibleCount, setVisibleCount] = useState(INITIAL_PROJECTS);
-    const [selectedProject, setSelectedProject] =
-        useState<Project | null>(null);
+    const content = portfolioContent.projects;
 
-    const visibleProjects = projects.slice(0, visibleCount);
-    const hasMore = visibleCount < projects.length;
+    const [visibleCount, setVisibleCount] = useState(INITIAL_ITEMS);
+    const [selectedProject, setSelectedProject] = useState<Project | null>(
+        null,
+    );
+    const [selectedCertificate, setSelectedCertificate] =
+        useState<Certificate | null>(null);
+    const [activeFilter, setActiveFilter] = useState<ActiveFilter>("all");
 
+    // Keep source data separate, but use one ordered collection for display.
+    const allItems: PortfolioItem[] = [
+        ...projects.map((project) => ({
+            type: "project" as const,
+            id: project.id,
+            data: project,
+        })),
+        ...certificates.map((certificate) => ({
+            type: "certificate" as const,
+            id: certificate.id,
+            data: certificate,
+        })),
+    ];
+
+    const filteredItems = allItems.filter((item) => {
+        if (activeFilter === "all") return true;
+        return item.type === (activeFilter === "projects" ? "project" : "certificate");
+    });
+
+    const visibleItems = filteredItems.slice(0, visibleCount);
+    const hasMore = visibleCount < filteredItems.length;
+
+    const filters: {
+        label: string;
+        value: ActiveFilter;
+        count: number;
+    }[] = [
+            {
+                label: "All",
+                value: "all",
+                count: allItems.length,
+            },
+            {
+                label: "Projects",
+                value: "projects",
+                count: projects.length,
+            },
+            {
+                label: "Certificates",
+                value: "certificates",
+                count: certificates.length,
+            },
+        ];
+
+    const changeFilter = (filter: ActiveFilter) => {
+        setActiveFilter(filter);
+        setVisibleCount(INITIAL_ITEMS);
+    };
 
     return (
         <section
@@ -340,17 +578,19 @@ export function Projects() {
             className="relative scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32"
         >
             <div className="mx-auto max-w-7xl">
+                {/* Section heading */}
                 <motion.div
                     initial={{ opacity: 0, y: 18 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.5 }}
-                    className="mb-10 flex flex-col justify-between gap-5 sm:mb-14 sm:flex-row sm:items-end"
+                    className="mb-8 flex flex-col justify-between gap-5 sm:mb-10 sm:flex-row sm:items-end"
                 >
                     <div>
                         <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-blue-400">
                             {content.eyebrow}
                         </p>
+
                         <h2
                             id="projects-heading"
                             className="text-3xl font-semibold tracking-tight text-white sm:text-5xl"
@@ -358,142 +598,275 @@ export function Projects() {
                             {content.heading}
                             <span className="text-blue-400">.</span>
                         </h2>
+
                         <p className="mt-4 max-w-xl text-sm leading-7 text-white/50 sm:text-base">
                             {content.description}
                         </p>
                     </div>
 
-                    <p className="text-sm text-white/40">
-                        {content.projectCount
-                            .replace("{visible}", String(visibleProjects.length))
-                            .replace("{total}", String(projects.length))}
+                    <p className="text-sm text-white/40" aria-live="polite">
+                        Showing {visibleItems.length} of {filteredItems.length} items
                     </p>
                 </motion.div>
 
-                {projects.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-                        <AnimatePresence initial={false}>
-                            {visibleProjects.map((project, index) => (
-                                <motion.button
-                                    key={project.id}
-                                    type="button"
-                                    onClick={() => setSelectedProject(project)}
-                                    aria-label={`Open ${project.title} project details`}
-                                    initial={{ opacity: 0, y: 18 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 12 }}
-                                    transition={{
-                                        duration: 0.3,
-                                        delay: Math.min(index % 6, 5) * 0.04,
-                                    }}
-                                    whileHover={{ y: -5 }}
-                                    whileTap={{ scale: 0.99 }}
-                                    className="group cursor-pointer overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.025] text-left transition-colors duration-300 hover:border-blue-400/30 hover:bg-white/[0.045] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400 sm:rounded-3xl"
+                {/* Filter buttons */}
+                <div className="mb-8 flex flex-wrap items-center gap-2 sm:mb-10">
+                    {filters.map((filter) => {
+                        const isActive = activeFilter === filter.value;
+
+                        return (
+                            <button
+                                key={filter.value}
+                                type="button"
+                                onClick={() => changeFilter(filter.value)}
+                                aria-pressed={isActive}
+                                className={`inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 ${isActive
+                                        ? "border-blue-400/40 bg-blue-500/15 text-blue-200"
+                                        : "border-white/10 bg-white/[0.025] text-white/55 hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
+                                    }`}
+                            >
+                                {filter.value === "certificates" && (
+                                    <Award size={15} />
+                                )}
+
+                                {filter.label}
+
+                                <span
+                                    className={`rounded-full px-2 py-0.5 text-[11px] ${isActive
+                                            ? "bg-blue-400/15 text-blue-200"
+                                            : "bg-white/[0.06] text-white/45"
+                                        }`}
                                 >
-                                    <div className="relative aspect-[16/10] overflow-hidden bg-[#111118]">
-                                        <ProjectPreview
-                                            src={project.images[0]}
-                                            title={project.title}
-                                        />
+                                    {filter.count}
+                                </span>
+                            </button>
+                        );
+                    })}
+                </div>
 
-                                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
+                {/* Unified projects + certificates grid */}
+                {visibleItems.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+                        <AnimatePresence initial={false} mode="popLayout">
+                            {visibleItems.map((item, index) => {
+                                if (item.type === "project") {
+                                    const project = item.data;
 
-                                        <span className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white/80 backdrop-blur-md">
-                                            {project.category}
-                                        </span>
+                                    return (
+                                        <motion.button
+                                            key={`project-${project.id}`}
+                                            type="button"
+                                            onClick={() => setSelectedProject(project)}
+                                            aria-label={`Open ${project.title} project details`}
+                                            initial={{ opacity: 0, y: 18 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 12 }}
+                                            transition={{
+                                                duration: 0.3,
+                                                delay: Math.min(index % ITEMS_PER_LOAD, 5) * 0.04,
+                                            }}
+                                            whileHover={{ y: -5 }}
+                                            whileTap={{ scale: 0.99 }}
+                                            className="group cursor-pointer overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.025] text-left transition-colors duration-300 hover:border-blue-400/30 hover:bg-white/[0.045] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400 sm:rounded-3xl"
+                                        >
+                                            <div className="relative aspect-[16/10] overflow-hidden bg-[#111118]">
+                                                <ProjectPreview
+                                                    src={project.images[0]}
+                                                    title={project.title}
+                                                />
 
-                                        <span className="absolute bottom-4 right-4 flex size-10 items-center justify-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-md transition duration-300 group-hover:border-blue-400/40 group-hover:bg-blue-500/20 group-hover:text-blue-200">
-                                            <ArrowUpRight size={19} />
-                                        </span>
-                                    </div>
+                                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
 
-                                    <div className="p-5 sm:p-6">
-                                        <div className="flex items-start justify-between gap-3">
-                                            <h3 className="text-xl font-medium tracking-tight text-white sm:text-2xl">
-                                                {project.title}
-                                            </h3>
-                                            <span className="shrink-0 text-xs text-white/30">
-                                                {String(index + 1).padStart(2, "0")}
+                                                <span className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white/80 backdrop-blur-md">
+                                                    {project.category}
+                                                </span>
+
+                                                <span className="absolute bottom-4 right-4 flex size-10 items-center justify-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-md transition duration-300 group-hover:border-blue-400/40 group-hover:bg-blue-500/20 group-hover:text-blue-200">
+                                                    <ArrowUpRight size={19} />
+                                                </span>
+                                            </div>
+
+                                            <div className="p-5 sm:p-6">
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <h3 className="text-xl font-medium tracking-tight text-white sm:text-2xl">
+                                                        {project.title}
+                                                    </h3>
+
+                                                    <span className="shrink-0 text-xs text-white/30">
+                                                        {String(
+                                                            index + 1,
+                                                        ).padStart(2, "0")}
+                                                    </span>
+                                                </div>
+
+                                                <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/50">
+                                                    {project.shortDescription}
+                                                </p>
+
+                                                {project.techStack.length > 0 && (
+                                                    <div className="mt-5 flex flex-wrap gap-2">
+                                                        {project.techStack
+                                                            .slice(0, 3)
+                                                            .map((tech) => (
+                                                                <span
+                                                                    key={tech}
+                                                                    className="rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[11px] text-white/55"
+                                                                >
+                                                                    {tech}
+                                                                </span>
+                                                            ))}
+
+                                                        {project.techStack.length > 3 && (
+                                                            <span className="px-1 py-1 text-[11px] text-white/40">
+                                                                +{project.techStack.length - 3}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )}
+
+                                                <div className="mt-5 flex items-center gap-2 text-sm text-blue-300/80 transition-colors group-hover:text-blue-300">
+                                                    View project
+                                                    <ArrowUpRight size={15} />
+                                                </div>
+                                            </div>
+                                        </motion.button>
+                                    );
+                                }
+
+                                const certificate = item.data;
+
+                                return (
+                                    <motion.button
+                                        key={`certificate-${certificate.id}`}
+                                        type="button"
+                                        onClick={() => setSelectedCertificate(certificate)}
+                                        aria-label={`View certificate: ${certificate.title}`}
+                                        initial={{ opacity: 0, y: 18 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 12 }}
+                                        transition={{
+                                            duration: 0.3,
+                                            delay: Math.min(index % ITEMS_PER_LOAD, 5) * 0.04,
+                                        }}
+                                        whileHover={{ y: -5 }}
+                                        whileTap={{ scale: 0.99 }}
+                                        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.025] text-left transition-colors duration-300 hover:border-violet-400/30 hover:bg-white/[0.045] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 sm:rounded-3xl"
+                                    >
+                                        <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden border-b border-white/[0.06] bg-[#111118] p-4">
+                                            <Image
+                                                src={certificate.image}
+                                                alt={certificate.title}
+                                                width={1000}
+                                                height={700}
+                                                sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                                                className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+                                            />
+
+                                            <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-violet-400/20 bg-[#0b0b10]/85 px-3 py-1.5 text-xs text-violet-200 backdrop-blur-md">
+                                                <Award size={13} />
+                                                Certificate
+                                            </span>
+
+                                            <span className="absolute bottom-4 right-4 flex size-9 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white backdrop-blur-md transition group-hover:border-violet-400/40 group-hover:bg-violet-500/20">
+                                                <ArrowUpRight size={17} />
                                             </span>
                                         </div>
 
-                                        <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/50">
-                                            {project.shortDescription}
-                                        </p>
+                                        <div className="p-5 sm:p-6">
+                                            <h3 className="line-clamp-2 text-lg font-medium leading-snug tracking-tight text-white sm:text-xl">
+                                                {certificate.title}
+                                            </h3>
 
-                                        {project.techStack.length > 0 && (
-                                            <div className="mt-5 flex flex-wrap gap-2">
-                                                {project.techStack.slice(0, 3).map((tech) => (
-                                                    <span
-                                                        key={tech}
-                                                        className="rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[11px] text-white/55"
-                                                    >
-                                                        {tech}
-                                                    </span>
-                                                ))}
-                                                {project.techStack.length > 3 && (
-                                                    <span className="px-1 py-1 text-[11px] text-white/40">
-                                                        +{project.techStack.length - 3}
-                                                    </span>
-                                                )}
+                                            <p className="mt-2 text-sm text-white/55">
+                                                {certificate.issuer}
+                                            </p>
+
+                                            {certificate.period && (
+                                                <p className="mt-1 text-xs text-white/35">
+                                                    {certificate.period}
+                                                </p>
+                                            )}
+
+                                            {certificate.skills.length > 0 && (
+                                                <div className="mt-4 flex flex-wrap gap-2">
+                                                    {certificate.skills
+                                                        .slice(0, 3)
+                                                        .map((skill) => (
+                                                            <span
+                                                                key={skill}
+                                                                className="rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[11px] text-white/55"
+                                                            >
+                                                                {skill}
+                                                            </span>
+                                                        ))}
+
+                                                    {certificate.skills.length > 3 && (
+                                                        <span className="px-1 py-1 text-[11px] text-white/40">
+                                                            +{certificate.skills.length - 3}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            <div className="mt-5 flex items-center gap-2 text-sm text-violet-300/80 transition-colors group-hover:text-violet-300">
+                                                View certificate
+                                                <ArrowUpRight size={15} />
                                             </div>
-                                        )}
-
-                                        <div className="mt-5 flex items-center gap-2 text-sm text-blue-300/80 transition-colors group-hover:text-blue-300">
-                                            View project
-                                            <ArrowUpRight size={15} />
                                         </div>
-                                    </div>
-                                </motion.button>
-                            ))}
+                                    </motion.button>
+                                );
+                            })}
                         </AnimatePresence>
                     </div>
                 ) : (
                     <p className="rounded-2xl border border-white/10 p-8 text-center text-sm text-white/50">
-                        Projects will appear here soon.
+                        {activeFilter === "projects"
+                            ? "Projects will appear here soon."
+                            : activeFilter === "certificates"
+                                ? "Certificates will appear here once added."
+                                : "Portfolio items will appear here soon."}
                     </p>
                 )}
 
+                {/* One Load More button for the active filter */}
                 {hasMore && (
                     <div className="mt-10 flex justify-center sm:mt-12">
                         <button
                             type="button"
                             onClick={() =>
                                 setVisibleCount((count) =>
-                                    Math.min(count + INITIAL_PROJECTS, projects.length),
+                                    Math.min(
+                                        count + ITEMS_PER_LOAD,
+                                        filteredItems.length,
+                                    ),
                                 )
                             }
                             className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm text-white/75 transition hover:border-blue-400/30 hover:bg-blue-500/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
                         >
-                            Lihat Lebih Lanjut
+                            Load More
                             <ArrowRight size={16} />
                         </button>
                     </div>
                 )}
             </div>
 
+            {/* Modals */}
             <AnimatePresence>
                 {selectedProject && (
                     <ProjectModal
                         key={selectedProject.id}
                         project={selectedProject}
                         onClose={() => setSelectedProject(null)}
-                        onPrevious={() => {
-                            const index = projects.findIndex(
-                                (project) => project.id === selectedProject.id,
-                            );
-                            const previous =
-                                (index - 1 + projects.length) % projects.length;
-                            setSelectedProject(projects[previous]);
-                        }}
-                        onNext={() => {
-                            const index = projects.findIndex(
-                                (project) => project.id === selectedProject.id,
-                            );
-                            setSelectedProject(
-                                projects[(index + 1) % projects.length],
-                            );
-                        }}
+                    />
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {selectedCertificate && (
+                    <CertificateModal
+                        key={selectedCertificate.id}
+                        certificate={selectedCertificate}
+                        onClose={() => setSelectedCertificate(null)}
                     />
                 )}
             </AnimatePresence>
