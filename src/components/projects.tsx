@@ -13,6 +13,30 @@ import {
     FolderOpen,
     X,
 } from "lucide-react";
+import {
+    siBootstrap,
+    siCss,
+    siDart,
+    siFigma,
+    siFirebase,
+    siFlutter,
+    siGit,
+    siGithub,
+    siHtml5,
+    siJavascript,
+    siLaravel,
+    siMysql,
+    siPostgresql,
+    siNextdotjs,
+    siPhp,
+    siSharp,
+    siPostman,
+    siReact,
+    siSupabase,
+    siTailwindcss,
+    siTypescript,
+    type SimpleIcon,
+} from "simple-icons";
 
 import { projects, type Project } from "@/data/projects";
 import { certificates, type Certificate } from "@/data/certificates";
@@ -25,6 +49,55 @@ type ActiveFilter = "all" | "projects" | "certificates";
 type PortfolioItem =
     | { type: "project"; id: string; data: Project }
     | { type: "certificate"; id: string; data: Certificate };
+
+const technologyIcons: Record<string, SimpleIcon> = {
+    Bootstrap: siBootstrap,
+    CSS: siCss,
+    Dart: siDart,
+    Figma: siFigma,
+    Firebase: siFirebase,
+    Flutter: siFlutter,
+    Git: siGit,
+    GitHub: siGithub,
+    HTML: siHtml5,
+    HTML5: siHtml5,
+    JavaScript: siJavascript,
+    Laravel: siLaravel,
+    MySQL: siMysql,
+    PostgreSQL: siPostgresql,
+    "Next.js": siNextdotjs,
+    PHP: siPhp,
+    "C#": siSharp,
+    Postman: siPostman,
+    React: siReact,
+    "React.js": siReact,
+    Supabase: siSupabase,
+    "Tailwind CSS": siTailwindcss,
+    Tailwind: siTailwindcss,
+    TypeScript: siTypescript,
+};
+
+function TechnologyIcon({ name }: { name: string }) {
+    const icon = technologyIcons[name];
+
+    if (!icon) return null;
+
+    return (
+        <svg
+            aria-hidden="true"
+            focusable="false"
+            viewBox="0 0 24 24"
+            className="size-3.5 shrink-0"
+            fill={`#${icon.hex}`}
+        >
+            <path d={icon.path} />
+        </svg>
+    );
+}
+
+/* --------------------------------------------------
+   PROJECT PREVIEW
+-------------------------------------------------- */
 
 function ProjectPreview({
     src,
@@ -42,12 +115,12 @@ function ProjectPreview({
             <div
                 role="img"
                 aria-label={`${title} image placeholder`}
-                className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/15 via-violet-500/10 to-[#101016]"
+                className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/15 via-blue-500/10 to-[#101016]"
             >
                 <div className="flex flex-col items-center gap-3 text-white/35">
                     <FolderOpen size={34} strokeWidth={1.25} />
                     <span className="text-[10px] uppercase tracking-[0.22em]">
-                        Project Preview
+                        Pratinjau Proyek
                     </span>
                 </div>
             </div>
@@ -66,6 +139,54 @@ function ProjectPreview({
     );
 }
 
+/* --------------------------------------------------
+   CERTIFICATE PREVIEW
+-------------------------------------------------- */
+
+function SertifikatPreview({
+    src,
+    title,
+    sizes = "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw",
+}: {
+    src?: string;
+    title: string;
+    sizes?: string;
+}) {
+    const [imageFailed, setImageFailed] = useState(false);
+
+    if (!src || imageFailed) {
+        return (
+            <div
+                role="img"
+                aria-label={`${title} certificate image placeholder`}
+                className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/15 via-blue-500/10 to-[#101016]"
+            >
+                <div className="flex flex-col items-center gap-3 text-white/35">
+                    <Award size={34} strokeWidth={1.25} />
+                    <span className="text-[10px] uppercase tracking-[0.22em]">
+                        Pratinjau Sertifikat
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <Image
+            src={src}
+            alt={`Sertifikat: ${title}`}
+            fill
+            sizes={sizes}
+            className="object-contain"
+            onError={() => setImageFailed(true)}
+        />
+    );
+}
+
+/* --------------------------------------------------
+   PROJECT MODAL
+-------------------------------------------------- */
+
 function ProjectModal({
     project,
     onClose,
@@ -77,16 +198,23 @@ function ProjectModal({
     const [activeImage, setActiveImage] = useState(0);
 
     useEffect(() => {
-        const previousOverflow = document.body.style.overflow;
-        const previouslyFocused = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
 
-        document.body.style.overflow = "hidden";
+    const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
 
-        return () => {
-            document.body.style.overflow = previousOverflow;
-            previouslyFocused?.focus();
-        };
-    }, []);
+    document.body.style.overflow = "hidden";
+
+    if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+        document.body.style.overflow = previousOverflow;
+        document.body.style.paddingRight = previousPaddingRight;
+    };
+}, []);
 
     const handleKeyDown = useCallback(
         (event: KeyboardEvent) => {
@@ -146,7 +274,7 @@ function ProjectModal({
             >
                 <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3 sm:px-6">
                     <div className="flex min-w-0 items-center gap-2 text-xs text-white/45">
-                        <span>PROJECTS</span>
+                        <span>PROYEK</span>
                         <span>/</span>
                         <span className="truncate text-white/80">
                             {project.title}
@@ -156,7 +284,7 @@ function ProjectModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        aria-label="Close project details"
+                        aria-label="Tutup detail proyek"
                         autoFocus
                         className="ml-3 flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/10 text-white/70 transition hover:border-white/20 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-blue-400"
                     >
@@ -179,7 +307,7 @@ function ProjectModal({
                                         <button
                                             type="button"
                                             onClick={() => changeImage(-1)}
-                                            aria-label="Previous screenshot"
+                                            aria-label="Gambar sebelumnya"
                                             className="absolute left-3 top-1/2 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-black/60 text-white backdrop-blur-md transition hover:bg-black/85 focus-visible:outline-2 focus-visible:outline-blue-400"
                                         >
                                             <ArrowLeft size={18} />
@@ -188,7 +316,7 @@ function ProjectModal({
                                         <button
                                             type="button"
                                             onClick={() => changeImage(1)}
-                                            aria-label="Next screenshot"
+                                            aria-label="Gambar berikutnya"
                                             className="absolute right-3 top-1/2 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-black/60 text-white backdrop-blur-md transition hover:bg-black/85 focus-visible:outline-2 focus-visible:outline-blue-400"
                                         >
                                             <ArrowRight size={18} />
@@ -204,18 +332,18 @@ function ProjectModal({
                             {images.length > 1 && (
                                 <div
                                     className="mt-3 flex gap-2 overflow-x-auto pb-1"
-                                    aria-label="Screenshot gallery"
+                                    aria-label="Galeri gambar"
                                 >
                                     {images.map((src, index) => (
                                         <button
                                             key={`${src}-${index}`}
                                             type="button"
                                             onClick={() => setActiveImage(index)}
-                                            aria-label={`Show screenshot ${index + 1}`}
+                                            aria-label={`Tampilkan gambar ${index + 1}`}
                                             aria-pressed={activeImage === index}
                                             className={`relative size-16 shrink-0 cursor-pointer overflow-hidden rounded-lg border bg-white/5 sm:size-20 ${activeImage === index
-                                                    ? "border-blue-400"
-                                                    : "border-white/10 opacity-60 hover:opacity-100"
+                                                ? "border-blue-400"
+                                                : "border-white/10 opacity-60 hover:opacity-100"
                                                 }`}
                                         >
                                             <ProjectPreview
@@ -252,7 +380,7 @@ function ProjectModal({
 
                             <div className="mt-7">
                                 <h4 className="text-sm font-medium text-white">
-                                    Role & Contribution
+                                    Peran dan Kontribusi
                                 </h4>
                                 <p className="mt-2 text-sm leading-6 text-white/55">
                                     {project.role}
@@ -262,7 +390,7 @@ function ProjectModal({
                             {project.features.length > 0 && (
                                 <div className="mt-7">
                                     <h4 className="text-sm font-medium text-white">
-                                        Key Features
+                                        Fitur Utama
                                     </h4>
                                     <ul className="mt-3 space-y-3">
                                         {project.features.map((feature) => (
@@ -290,8 +418,9 @@ function ProjectModal({
                                         {project.techStack.map((tech) => (
                                             <span
                                                 key={tech}
-                                                className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/65"
+                                                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/65"
                                             >
+                                                <TechnologyIcon name={tech} />
                                                 {tech}
                                             </span>
                                         ))}
@@ -323,72 +452,40 @@ function ProjectModal({
     );
 }
 
-function CertificatePreview({
-    src,
-    title,
-    sizes = "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw",
-}: {
-    src?: string;
-    title: string;
-    sizes?: string;
-}) {
-    const [imageFailed, setImageFailed] = useState(false);
+/* --------------------------------------------------
+   CERTIFICATE MODAL
+-------------------------------------------------- */
 
-    if (!src || imageFailed) {
-        return (
-            <div
-                role="img"
-                aria-label={`${title} certificate image placeholder`}
-                className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-violet-500/15 via-blue-500/10 to-[#101016]"
-            >
-                <div className="flex flex-col items-center gap-3 text-white/35">
-                    <Award size={34} strokeWidth={1.25} />
-                    <span className="text-[10px] uppercase tracking-[0.22em]">
-                        Certificate Preview
-                    </span>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <Image
-            src={src}
-            alt={`Certificate: ${title}`}
-            fill
-            sizes={sizes}
-            className="object-contain"
-            onError={() => setImageFailed(true)}
-        />
-    );
-}
-
-function CertificateModal({
+function SertifikatModal({
     certificate,
     onClose,
 }: {
     certificate: Certificate;
     onClose: () => void;
 }) {
+    
     useEffect(() => {
-        const previousOverflow = document.body.style.overflow;
-        document.body.style.overflow = "hidden";
+    const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
 
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape") onClose();
-        };
+    const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
 
-        window.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
 
-        return () => {
-            document.body.style.overflow = previousOverflow;
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, [onClose]);
+    if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+        document.body.style.overflow = previousOverflow;
+        document.body.style.paddingRight = previousPaddingRight;
+    };
+}, []);
 
     return (
         <motion.div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-3 backdrop-blur-md sm:p-6"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -400,115 +497,112 @@ function CertificateModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="certificate-dialog-title"
-                className="relative flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#121214] shadow-2xl sm:rounded-3xl"
+                className="relative max-h-[90dvh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-white/10 bg-[#0b0b10] p-5 shadow-2xl sm:p-8"
                 initial={{ opacity: 0, y: 16, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 12, scale: 0.98 }}
-                transition={{ duration: 0.22 }}
             >
                 <button
                     type="button"
                     onClick={onClose}
-                    aria-label="Close certificate details"
-                    className="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black"
+                    aria-label="Tutup detail sertifikat"
+                    className="absolute right-4 top-4 flex size-9 items-center justify-center rounded-full border border-white/10 text-white/70 transition hover:bg-white/10"
                 >
                     <X size={18} />
                 </button>
 
-                <div className="relative shrink-0 border-b border-white/10 bg-[#0b0b0d]">
-                    <div className="relative aspect-[16/10] w-full sm:aspect-[16/9]">
-                        <CertificatePreview
+                <div className="mb-5 flex items-center gap-2 text-xs text-white/45">
+                    <span>PORTFOLIO</span>
+                    <span>/</span>
+                    <span className="text-white/80">CERTIFICATES</span>
+                </div>
+
+                <div className="relative mb-6 flex min-h-48 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                    <div className="relative min-h-[12rem] w-full max-w-full aspect-[12/8]">
+                        <SertifikatPreview
                             src={certificate.image}
                             title={certificate.title}
-                            sizes="(max-width: 768px) 100vw, 768px"
+                            sizes="(max-width: 768px) 100vw, 700px"
                         />
                     </div>
                 </div>
 
-                <div className="overflow-y-auto p-5 sm:p-7">
-                    <div className="mb-4 flex flex-wrap items-center gap-2">
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-black">
-                            <Award size={13} />
-                            Sertifikat
-                        </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1.5 text-xs text-blue-300">
+                    <Award size={14} />
+                    Sertifikat
+                </span>
 
-                        <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/75">
-                            {certificate.category}
-                        </span>
+                <h3
+                    id="certificate-dialog-title"
+                    className="mt-4 pr-8 text-2xl font-semibold tracking-tight text-white sm:text-3xl"
+                >
+                    {certificate.title}
+                </h3>
 
-                        {certificate.period && (
-                            <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/75">
-                                {certificate.period}
-                            </span>
-                        )}
+                <p className="mt-2 text-sm text-white/55">
+                    {certificate.issuer}
+                </p>
+
+                {certificate.period && (
+                    <p className="mt-1 text-xs text-white/35">
+                        {certificate.period}
+                    </p>
+                )}
+
+                {certificate.description && (
+                    <div className="mt-7">
+                        <h4 className="text-sm font-medium text-white">
+                            Deskripsi
+                        </h4>
+                        <p className="mt-2 text-sm leading-7 text-white/60">
+                            {certificate.description}
+                        </p>
                     </div>
+                )}
 
-                    <h3
-                        id="certificate-dialog-title"
-                        className="text-2xl font-semibold tracking-tight text-white sm:text-3xl"
-                    >
-                        {certificate.title}
-                    </h3>
+                {certificate.learnings.length > 0 && (
+                    <div className="mt-7">
+                        <h4 className="text-sm font-medium text-white">
+                            Hal yang Dipelajari
+                        </h4>
+                        <ul className="mt-3 space-y-3">
+                            {certificate.learnings.map((learning) => (
+                                <li
+                                    key={learning}
+                                    className="flex items-start gap-3 text-sm leading-6 text-white/60"
+                                >
+                                    <Check
+                                        size={16}
+                                        className="mt-1 shrink-0 text-blue-400"
+                                    />
+                                    <span>{learning}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
-                    <p className="mt-2 text-sm text-blue-400">
-                        {certificate.issuer}
-                    </p>
+                {certificate.skills.length > 0 && (
+                    <div className="mt-5 flex flex-wrap gap-2">
+                        {certificate.skills.map((skill) => (
+                            <span
+                                key={skill}
+                                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/65"
+                            >
+                                <TechnologyIcon name={skill} />
+                                {skill}
+                            </span>
+                        ))}
+                    </div>
+                )}
 
-                    <p className="mt-4 text-sm leading-7 text-white/75 sm:text-base">
-                        {certificate.description}
-                    </p>
-
-                    {certificate.learnings.length > 0 && (
-                        <div className="mt-7">
-                            <h4 className="text-sm font-semibold uppercase tracking-wide text-white/55">
-                                Yang Dipelajari
-                            </h4>
-
-                            <ul className="mt-3 space-y-2.5">
-                                {certificate.learnings.map((learning) => (
-                                    <li
-                                        key={learning}
-                                        className="flex items-start gap-3 text-sm leading-6 text-white/75"
-                                    >
-                                        <Check
-                                            size={16}
-                                            className="mt-1 shrink-0 text-blue-400"
-                                        />
-                                        <span>{learning}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-
-                    {certificate.skills.length > 0 && (
-                        <div className="mt-7">
-                            <h4 className="text-sm font-semibold uppercase tracking-wide text-white/55">
-                                Topik
-                            </h4>
-
-                            <div className="mt-3 flex flex-wrap gap-2">
-                                {certificate.skills.map((skill) => (
-                                    <span
-                                        key={skill}
-                                        className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/80"
-                                    >
-                                        <span aria-hidden="true">‹›</span>
-                                        {skill}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
             </motion.section>
         </motion.div>
     );
 }
 
-
 /* --------------------------------------------------
-   PROJECTS & CERTIFICATES SECTION
+   PROYEK & CERTIFICATES SECTION
 -------------------------------------------------- */
 
 export function Projects() {
@@ -518,11 +612,10 @@ export function Projects() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(
         null,
     );
-    const [selectedCertificate, setSelectedCertificate] =
+    const [selectedSertifikat, setSelectedSertifikat] =
         useState<Certificate | null>(null);
     const [activeFilter, setActiveFilter] = useState<ActiveFilter>("all");
 
-    // Keep source data separate, but use one ordered collection for display.
     const allItems: PortfolioItem[] = [
         ...projects.map((project) => ({
             type: "project" as const,
@@ -535,6 +628,7 @@ export function Projects() {
             data: certificate,
         })),
     ];
+
 
     const filteredItems = allItems.filter((item) => {
         if (activeFilter === "all") return true;
@@ -555,12 +649,12 @@ export function Projects() {
                 count: allItems.length,
             },
             {
-                label: "Projects",
+                label: "Proyek",
                 value: "projects",
                 count: projects.length,
             },
             {
-                label: "Certificates",
+                label: "Sertifikat",
                 value: "certificates",
                 count: certificates.length,
             },
@@ -605,7 +699,7 @@ export function Projects() {
                     </div>
 
                     <p className="text-sm text-white/40" aria-live="polite">
-                        Showing {visibleItems.length} of {filteredItems.length} items
+                        Menampilkan {visibleItems.length} dari {filteredItems.length} item
                     </p>
                 </motion.div>
 
@@ -621,8 +715,8 @@ export function Projects() {
                                 onClick={() => changeFilter(filter.value)}
                                 aria-pressed={isActive}
                                 className={`inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 ${isActive
-                                        ? "border-blue-400/40 bg-blue-500/15 text-blue-200"
-                                        : "border-white/10 bg-white/[0.025] text-white/55 hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
+                                    ? "border-blue-400/40 bg-blue-500/15 text-blue-200"
+                                    : "border-white/10 bg-white/[0.025] text-white/55 hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
                                     }`}
                             >
                                 {filter.value === "certificates" && (
@@ -633,8 +727,8 @@ export function Projects() {
 
                                 <span
                                     className={`rounded-full px-2 py-0.5 text-[11px] ${isActive
-                                            ? "bg-blue-400/15 text-blue-200"
-                                            : "bg-white/[0.06] text-white/45"
+                                        ? "bg-blue-400/15 text-blue-200"
+                                        : "bg-white/[0.06] text-white/45"
                                         }`}
                                 >
                                     {filter.count}
@@ -657,7 +751,7 @@ export function Projects() {
                                             key={`project-${project.id}`}
                                             type="button"
                                             onClick={() => setSelectedProject(project)}
-                                            aria-label={`Open ${project.title} project details`}
+                                            aria-label={`Lihat detail proyek ${project.title}`}
                                             initial={{ opacity: 0, y: 18 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: 12 }}
@@ -710,8 +804,9 @@ export function Projects() {
                                                             .map((tech) => (
                                                                 <span
                                                                     key={tech}
-                                                                    className="rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[11px] text-white/55"
+                                                                    className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[11px] text-white/65"
                                                                 >
+                                                                    <TechnologyIcon name={tech} />
                                                                     {tech}
                                                                 </span>
                                                             ))}
@@ -725,7 +820,7 @@ export function Projects() {
                                                 )}
 
                                                 <div className="mt-5 flex items-center gap-2 text-sm text-blue-300/80 transition-colors group-hover:text-blue-300">
-                                                    View project
+                                                    Lihat Proyek
                                                     <ArrowUpRight size={15} />
                                                 </div>
                                             </div>
@@ -739,8 +834,8 @@ export function Projects() {
                                     <motion.button
                                         key={`certificate-${certificate.id}`}
                                         type="button"
-                                        onClick={() => setSelectedCertificate(certificate)}
-                                        aria-label={`View certificate: ${certificate.title}`}
+                                        onClick={() => setSelectedSertifikat(certificate)}
+                                        aria-label={`Lihat sertifikat: ${certificate.title}`}
                                         initial={{ opacity: 0, y: 18 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: 12 }}
@@ -750,24 +845,21 @@ export function Projects() {
                                         }}
                                         whileHover={{ y: -5 }}
                                         whileTap={{ scale: 0.99 }}
-                                        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.025] text-left transition-colors duration-300 hover:border-violet-400/30 hover:bg-white/[0.045] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 sm:rounded-3xl"
+                                        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.025] text-left transition-colors duration-300 hover:border-blue-400/30 hover:bg-white/[0.045] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400 sm:rounded-3xl"
                                     >
                                         <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden border-b border-white/[0.06] bg-[#111118] p-4">
-                                            <Image
+                                            <SertifikatPreview
                                                 src={certificate.image}
-                                                alt={certificate.title}
-                                                width={1000}
-                                                height={700}
+                                                title={certificate.title}
                                                 sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
-                                                className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
                                             />
 
-                                            <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-violet-400/20 bg-[#0b0b10]/85 px-3 py-1.5 text-xs text-violet-200 backdrop-blur-md">
+                                            <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-blue-400/20 bg-[#0b0b10]/85 px-3 py-1.5 text-xs text-blue-200 backdrop-blur-md">
                                                 <Award size={13} />
-                                                Certificate
+                                                Sertifikat
                                             </span>
 
-                                            <span className="absolute bottom-4 right-4 flex size-9 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white backdrop-blur-md transition group-hover:border-violet-400/40 group-hover:bg-violet-500/20">
+                                            <span className="absolute bottom-4 right-4 flex size-9 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white backdrop-blur-md transition group-hover:border-blue-400/40 group-hover:bg-blue-500/20">
                                                 <ArrowUpRight size={17} />
                                             </span>
                                         </div>
@@ -794,8 +886,9 @@ export function Projects() {
                                                         .map((skill) => (
                                                             <span
                                                                 key={skill}
-                                                                className="rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[11px] text-white/55"
+                                                                className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[11px] text-white/65"
                                                             >
+                                                                <TechnologyIcon name={skill} />
                                                                 {skill}
                                                             </span>
                                                         ))}
@@ -808,8 +901,8 @@ export function Projects() {
                                                 </div>
                                             )}
 
-                                            <div className="mt-5 flex items-center gap-2 text-sm text-violet-300/80 transition-colors group-hover:text-violet-300">
-                                                View certificate
+                                            <div className="mt-5 flex items-center gap-2 text-sm text-blue-300/80 transition-colors group-hover:text-blue-300">
+                                                Lihat Sertifikat
                                                 <ArrowUpRight size={15} />
                                             </div>
                                         </div>
@@ -821,14 +914,14 @@ export function Projects() {
                 ) : (
                     <p className="rounded-2xl border border-white/10 p-8 text-center text-sm text-white/50">
                         {activeFilter === "projects"
-                            ? "Projects will appear here soon."
+                            ? "Proyek akan ditampilkan di sini."
                             : activeFilter === "certificates"
-                                ? "Certificates will appear here once added."
-                                : "Portfolio items will appear here soon."}
+                                ? "Sertifikat will appear here once added."
+                                : "Konten portofolio akan ditampilkan di sini."}
                     </p>
                 )}
 
-                {/* One Load More button for the active filter */}
+                {/* One Muat Lebih Banyak button for the active filter */}
                 {hasMore && (
                     <div className="mt-10 flex justify-center sm:mt-12">
                         <button
@@ -843,7 +936,7 @@ export function Projects() {
                             }
                             className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm text-white/75 transition hover:border-blue-400/30 hover:bg-blue-500/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
                         >
-                            Load More
+                            Muat Lebih Banyak
                             <ArrowRight size={16} />
                         </button>
                     </div>
@@ -862,11 +955,11 @@ export function Projects() {
             </AnimatePresence>
 
             <AnimatePresence>
-                {selectedCertificate && (
-                    <CertificateModal
-                        key={selectedCertificate.id}
-                        certificate={selectedCertificate}
-                        onClose={() => setSelectedCertificate(null)}
+                {selectedSertifikat && (
+                    <SertifikatModal
+                        key={selectedSertifikat.id}
+                        certificate={selectedSertifikat}
+                        onClose={() => setSelectedSertifikat(null)}
                     />
                 )}
             </AnimatePresence>

@@ -11,10 +11,8 @@ const sectionOrder = [
   "about",
   "skills",
   "projects",
-  // Add later: "experience", "education", "contact"
 ] as const satisfies readonly SectionId[];
 
-// Height of one row (Tailwind h-9 = 36px). The progress line uses it too.
 const ITEM_HEIGHT = 36;
 
 export function Navbar() {

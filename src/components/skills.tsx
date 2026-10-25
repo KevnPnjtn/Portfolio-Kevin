@@ -50,8 +50,6 @@ type Category = {
     items: readonly Tech[];
 };
 
-// Technology names are proper nouns, so they are not translated.
-// Only the section copy and category titles come from the i18n dictionary.
 const categories: readonly Category[] = [
     {
         id: "languages",
@@ -104,13 +102,6 @@ const categories: readonly Category[] = [
     },
 ];
 
-/* -------------------------------------------------------------------------- */
-/*  Logos                                                                     */
-/* -------------------------------------------------------------------------- */
-
-// Brand colors are used only when they stay readable on the near-black page
-// background (WCAG non-text contrast, 3:1). Darker brands (Next.js, GitHub,
-// Flutter, CSS) fall back to one neutral color so the row stays consistent.
 const PAGE_BACKGROUND = "09090b";
 const MIN_CONTRAST = 3;
 
@@ -157,10 +148,6 @@ function TechLogo({ icon }: { icon: TechIcon }) {
     );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Motion                                                                    */
-/* -------------------------------------------------------------------------- */
-
 const reveal = (delay = 0, y = 14) => ({
     initial: { opacity: 0, y },
     whileInView: { opacity: 1, y: 0 },
@@ -177,10 +164,6 @@ const rowVariants: Variants = {
     hidden: { opacity: 0, y: 14 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
-
-/* -------------------------------------------------------------------------- */
-/*  Section                                                                   */
-/* -------------------------------------------------------------------------- */
 
 export function Skills() {
     const { t } = useLanguage();

@@ -103,26 +103,5 @@ export const projects: Project[] = [
     techStack: [],
     features: [],
   },
-  {
-    id: "project-5",
-    title: "Project Five",
-    category: "Web Application",
-    shortDescription: "Replace this with your actual project summary.",
-    description: "Add the actual project description here.",
-    role: "Add your actual role and contributions.",
-    images: [],
-    techStack: [],
-    features: [],
-  },
-  {
-    id: "project-6",
-    title: "Project Six",
-    category: "Other",
-    shortDescription: "Replace this with your actual project summary.",
-    description: "Add the actual project description here.",
-    role: "Add your actual role and contributions.",
-    images: [],
-    techStack: [],
-    features: [],
-  },
+  
 ];
