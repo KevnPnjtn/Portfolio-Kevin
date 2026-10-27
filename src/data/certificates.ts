@@ -18,7 +18,7 @@ export const certificates: Certificate[] = [
         issuer: "CertNexus",
         category: "Fullstack Developer Associate",
         period: "2026",
-        image: "/certificates/sertifikat-pelatihan.jpg",
+        image: "/certificates/sertifikat-pelatihan.webp",
         description:
             "Mengikuti program pelatihan Fullstack Developer pada 21–23 Juli 2026 melalui sesi pembelajaran daring bersama instruktur menggunakan Zoom. Program ini mencakup kegiatan pembelajaran untuk mengembangkan pengetahuan dan keterampilan praktis dalam pengembangan aplikasi full-stack. Pada 25 Juli 2026, program diakhiri dengan ujian tertulis dan pengumpulan proyek untuk menunjukkan penerapan pengetahuan serta keterampilan yang telah diperoleh selama pelatihan.",
         learnings: [
@@ -35,7 +35,7 @@ export const certificates: Certificate[] = [
         issuer: "Politeknik Negeri Padang",
         category: "Perencanaan Bisnis Bidang TIK",
         period: "2025",
-        image: "/certificates/sertifikat-kmipn.jpg",
+        image: "/certificates/sertifikat-kmipn.webp",
         description:
             "Meraih Juara 1 pada kategori (Prototype) Perencanaan Bisnis Bidang TIK dalam Kompetisi Mahasiswa Informatika Politeknik Nasional (KMIPN) VII tahun 2025 melalui proyek WebKita, sebuah konsep layanan digital yang dikembangkan untuk membantu UMKM dan perusahaan memenuhi kebutuhan pengembangan website dan aplikasi mobile. Dalam proyek tim ini, saya berkontribusi dalam pengembangan WebKita sebagai media untuk merealisasikan gagasan bisnis digital, dengan pendekatan layanan modular yang fleksibel, terjangkau, dan dapat disesuaikan dengan kebutuhan klien.",
         learnings: [
@@ -57,7 +57,7 @@ export const certificates: Certificate[] = [
         issuer: "PT Harapan Jaya Sentosa",
         category: "Magang",
         period: "2025-2026",
-        image: "/certificates/sertifikat-magang.jpg",
+        image: "/certificates/sertifikat-magang.webp",
         description:
             "Mengikuti program pelatihan Fullstack Developer pada 21–23 Juli 2026 melalui sesi pembelajaran daring bersama instruktur menggunakan Zoom. Program ini mencakup kegiatan pembelajaran untuk mengembangkan pengetahuan dan keterampilan praktis dalam pengembangan aplikasi full-stack. Pada 25 Juli 2026, program diakhiri dengan ujian tertulis dan pengumpulan proyek untuk menunjukkan penerapan pengetahuan serta keterampilan yang telah diperoleh selama pelatihan.",
         learnings: [
@@ -74,7 +74,7 @@ export const certificates: Certificate[] = [
         issuer: "Politeknik Negeri Batam",
         category: "Magang",
         period: "2025",
-        image: "/certificates/sertifikat-pbl-sems4.jpg",
+        image: "/certificates/sertifikat-pbl-sems4.webp",
         description:
             "Mengikuti program pelatihan Fullstack Developer pada 21–23 Juli 2026 melalui sesi pembelajaran daring bersama instruktur menggunakan Zoom. Program ini mencakup kegiatan pembelajaran untuk mengembangkan pengetahuan dan keterampilan praktis dalam pengembangan aplikasi full-stack. Pada 25 Juli 2026, program diakhiri dengan ujian tertulis dan pengumpulan proyek untuk menunjukkan penerapan pengetahuan serta keterampilan yang telah diperoleh selama pelatihan.",
         learnings: [
@@ -91,7 +91,7 @@ export const certificates: Certificate[] = [
         issuer: "Politeknik Negeri Batam",
         category: "Magang",
         period: "2024",
-        image: "/certificates/sertifikat-pbl-sems3.jpg",
+        image: "/certificates/sertifikat-pbl-sems3.webp",
         description:
             "Mengikuti program pelatihan Fullstack Developer pada 21–23 Juli 2026 melalui sesi pembelajaran daring bersama instruktur menggunakan Zoom. Program ini mencakup kegiatan pembelajaran untuk mengembangkan pengetahuan dan keterampilan praktis dalam pengembangan aplikasi full-stack. Pada 25 Juli 2026, program diakhiri dengan ujian tertulis dan pengumpulan proyek untuk menunjukkan penerapan pengetahuan serta keterampilan yang telah diperoleh selama pelatihan.",
         learnings: [

@@ -14,27 +14,8 @@ import {
     X,
 } from "lucide-react";
 import {
-    siBootstrap,
-    siCss,
-    siDart,
-    siFigma,
-    siFirebase,
-    siFlutter,
-    siGit,
-    siGithub,
-    siHtml5,
-    siJavascript,
-    siLaravel,
-    siMysql,
-    siPostgresql,
-    siNextdotjs,
-    siPhp,
-    siSharp,
-    siPostman,
-    siReact,
-    siSupabase,
-    siTailwindcss,
-    siTypescript,
+    siBootstrap, siCss, siDart, siFigma, siFirebase, siFlutter, siGit, siGithub, siHtml5, siJavascript, siLaravel, siMysql, siPostgresql, siNextdotjs,
+    siPhp, siSharp, siPostman, siReact, siSupabase, siTailwindcss, siTypescript,
     type SimpleIcon,
 } from "simple-icons";
 
@@ -198,23 +179,23 @@ function ProjectModal({
     const [activeImage, setActiveImage] = useState(0);
 
     useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    const previousPaddingRight = document.body.style.paddingRight;
+        const previousOverflow = document.body.style.overflow;
+        const previousPaddingRight = document.body.style.paddingRight;
 
-    const scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
+        const scrollbarWidth =
+            window.innerWidth - document.documentElement.clientWidth;
 
-    document.body.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
 
-    if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
+        if (scrollbarWidth > 0) {
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
 
-    return () => {
-        document.body.style.overflow = previousOverflow;
-        document.body.style.paddingRight = previousPaddingRight;
-    };
-}, []);
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            document.body.style.paddingRight = previousPaddingRight;
+        };
+    }, []);
 
     const handleKeyDown = useCallback(
         (event: KeyboardEvent) => {
@@ -410,7 +391,7 @@ function ProjectModal({
                             )}
 
                             {project.techStack.length > 0 && (
-                                <div className="mt-7">
+                                <div className="mt-7 pb-5">
                                     <h4 className="text-sm font-medium text-white">
                                         Tech Stack
                                     </h4>
@@ -429,26 +410,52 @@ function ProjectModal({
                             )}
 
                             {project.links && project.links.length > 0 && (
-                                <div className="mt-8 flex flex-wrap gap-3 border-t border-white/10 pt-6">
-                                    {project.links.map((link) => (
-                                        <a
-                                            key={`${link.label}-${link.url}`}
-                                            href={link.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-medium text-black transition hover:bg-blue-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-                                        >
-                                            {link.label}
-                                            <ExternalLink size={15} />
-                                        </a>
-                                    ))}
+                                <div className="mt-5 flex items-center justify-between gap-4 border-t border-white/10 pt-6">
+
+                                    {project.links.map((link) => {
+                                        const isGithub =
+                                            link.url.toLowerCase().includes("github.com") ||
+                                            ["github", "kode", "code"].includes(
+                                                link.label.trim().toLowerCase(),
+                                            );
+
+                                        return (
+                                            <a
+                                                key={`${link.label}-${link.url}`}
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                aria-label={
+                                                    isGithub
+                                                        ? `Lihat kode ${project.title} di GitHub`
+                                                        : `Buka ${link.label} untuk ${project.title}`
+                                                }
+                                                className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-[#08080a] px-3.5 py-2 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"                                            >
+                                                {isGithub && (
+                                                    <svg
+                                                        aria-hidden="true"
+                                                        viewBox="0 0 24 24"
+                                                        className="size-5 shrink-0"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path d={siGithub.path} />
+                                                    </svg>
+                                                )}
+
+                                                {isGithub ? "Lihat Kode" : link.label}
+
+                                                {!isGithub && <ExternalLink size={15} />}
+                                            </a>
+                                        );
+                                    })}
+
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
             </motion.section>
-        </motion.div>
+        </motion.div >
     );
 }
 
@@ -463,25 +470,25 @@ function SertifikatModal({
     certificate: Certificate;
     onClose: () => void;
 }) {
-    
+
     useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    const previousPaddingRight = document.body.style.paddingRight;
+        const previousOverflow = document.body.style.overflow;
+        const previousPaddingRight = document.body.style.paddingRight;
 
-    const scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
+        const scrollbarWidth =
+            window.innerWidth - document.documentElement.clientWidth;
 
-    document.body.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
 
-    if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
+        if (scrollbarWidth > 0) {
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
 
-    return () => {
-        document.body.style.overflow = previousOverflow;
-        document.body.style.paddingRight = previousPaddingRight;
-    };
-}, []);
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            document.body.style.paddingRight = previousPaddingRight;
+        };
+    }, []);
 
     return (
         <motion.div
@@ -743,15 +750,22 @@ export function Projects() {
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
                         <AnimatePresence initial={false} mode="popLayout">
                             {visibleItems.map((item, index) => {
+
                                 if (item.type === "project") {
                                     const project = item.data;
 
+                                    const githubLinks = (project.links ?? []).filter((link) => {
+                                        const label = link.label.trim().toLowerCase();
+
+                                        return (
+                                            link.url.toLowerCase().includes("github.com") ||
+                                            ["github", "kode", "code", "frontend", "backend"].includes(label)
+                                        );
+                                    });
+
                                     return (
-                                        <motion.button
+                                        <motion.article
                                             key={`project-${project.id}`}
-                                            type="button"
-                                            onClick={() => setSelectedProject(project)}
-                                            aria-label={`Lihat detail proyek ${project.title}`}
                                             initial={{ opacity: 0, y: 18 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: 12 }}
@@ -760,73 +774,120 @@ export function Projects() {
                                                 delay: Math.min(index % ITEMS_PER_LOAD, 5) * 0.04,
                                             }}
                                             whileHover={{ y: -5 }}
-                                            whileTap={{ scale: 0.99 }}
-                                            className="group cursor-pointer overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.025] text-left transition-colors duration-300 hover:border-blue-400/30 hover:bg-white/[0.045] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400 sm:rounded-3xl"
+                                            className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.09] bg-[#101014] transition-colors duration-300 hover:border-blue-400/30 sm:rounded-3xl"
                                         >
-                                            <div className="relative aspect-[16/10] overflow-hidden bg-[#111118]">
+                                            {/* Project image */}
+                                            <button
+                                                type="button"
+                                                onClick={() => setSelectedProject(project)}
+                                                aria-label={`Lihat detail proyek ${project.title}`}
+                                                className="group relative block aspect-[16/10] w-full shrink-0 cursor-pointer overflow-hidden bg-[#111118] focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-blue-400"
+                                            >
                                                 <ProjectPreview
                                                     src={project.images[0]}
                                                     title={project.title}
+                                                    sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
                                                 />
 
                                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
 
-                                                <span className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white/80 backdrop-blur-md">
+                                                <span className="absolute left-4 top-4 rounded-full border border-white/15 bg-blue-500/90 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
                                                     {project.category}
                                                 </span>
 
-                                                <span className="absolute bottom-4 right-4 flex size-10 items-center justify-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-md transition duration-300 group-hover:border-blue-400/40 group-hover:bg-blue-500/20 group-hover:text-blue-200">
-                                                    <ArrowUpRight size={19} />
-                                                </span>
-                                            </div>
+                                                {project.year && (
+                                                    <span className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/60 px-3 py-1 text-xs text-white/90 backdrop-blur-md">
+                                                        {project.year}
+                                                    </span>
+                                                )}
 
-                                            <div className="p-5 sm:p-6">
+                                                <span className="absolute bottom-4 right-4 flex size-9 items-center justify-center rounded-full border border-white/15 bg-black/55 text-white backdrop-blur-md transition group-hover:border-blue-400/40 group-hover:bg-blue-500/20 group-hover:text-blue-200">
+                                                    <ArrowUpRight size={17} />
+                                                </span>
+                                            </button>
+
+                                            {/* Project content */}
+                                            <div className="flex flex-1 flex-col px-5 pt-5 sm:px-6 sm:pt-6">
                                                 <div className="flex items-start justify-between gap-3">
-                                                    <h3 className="text-xl font-medium tracking-tight text-white sm:text-2xl">
+                                                    <h3 className="line-clamp-2 min-w-0 text-lg font-semibold leading-snug tracking-tight text-white sm:text-xl">
                                                         {project.title}
                                                     </h3>
 
-                                                    <span className="shrink-0 text-xs text-white/30">
-                                                        {String(
-                                                            index + 1,
-                                                        ).padStart(2, "0")}
+                                                    <span className="shrink-0 pt-1 text-xs tabular-nums text-white/35">
+                                                        {String(index + 1).padStart(2, "0")}
                                                     </span>
                                                 </div>
 
-                                                <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/50">
+                                                <p className="mt-3 line-clamp-3 text-sm leading-6 text-white/55">
                                                     {project.shortDescription}
                                                 </p>
 
-                                                {project.techStack.length > 0 && (
-                                                    <div className="mt-5 flex flex-wrap gap-2">
-                                                        {project.techStack
-                                                            .slice(0, 3)
-                                                            .map((tech) => (
-                                                                <span
-                                                                    key={tech}
-                                                                    className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[11px] text-white/65"
-                                                                >
-                                                                    <TechnologyIcon name={tech} />
-                                                                    {tech}
-                                                                </span>
-                                                            ))}
+                                                {/* Bottom block: Tech stack + divider + footer, selalu menempel ke dasar kartu */}
+                                                <div className="mt-auto pt-5">
+                                                    {/* Tech stack: selalu dirender agar tinggi baris konsisten */}
+                                                    <div className="flex min-h-7 flex-wrap content-start items-center gap-2">
+                                                        {project.techStack.slice(0, 3).map((tech) => (
+                                                            <span
+                                                                key={tech}
+                                                                className="inline-flex h-7 items-center gap-1.5 rounded-full border border-white/[0.09] bg-white/[0.035] px-2.5 text-[11px] leading-none text-white/70"
+                                                            >
+                                                                <TechnologyIcon name={tech} />
+                                                                {tech}
+                                                            </span>
+                                                        ))}
 
                                                         {project.techStack.length > 3 && (
-                                                            <span className="px-1 py-1 text-[11px] text-white/40">
+                                                            <span className="inline-flex h-7 items-center rounded-full border border-white/[0.08] px-2.5 text-[11px] leading-none text-white/45">
                                                                 +{project.techStack.length - 3}
                                                             </span>
                                                         )}
                                                     </div>
-                                                )}
 
-                                                <div className="mt-5 flex items-center gap-2 text-sm text-blue-300/80 transition-colors group-hover:text-blue-300">
-                                                    Lihat Proyek
-                                                    <ArrowUpRight size={15} />
+                                                    {/* Divider + footer */}
+                                                    <div className="mt-5 flex min-h-[64px] items-center justify-between gap-3 border-t border-white/15">
+                                                        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+                                                            {githubLinks.length > 0 ? (
+                                                                githubLinks.map((link) => (
+                                                                    <a
+                                                                        key={`${link.label}-${link.url}`}
+                                                                        href={link.url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="inline-flex items-center gap-2 text-sm font-medium text-white/75 transition hover:text-white"
+                                                                    >
+                                                                        <svg
+                                                                            aria-hidden="true"
+                                                                            viewBox="0 0 24 24"
+                                                                            className="size-5 shrink-0"
+                                                                            fill="#F4F4F5"
+                                                                        >
+                                                                            <path d={siGithub.path} />
+                                                                        </svg>
+                                                                        {link.label}
+                                                                    </a>
+                                                                ))
+                                                            ) : (
+                                                                <span className="text-xs text-white/35">
+                                                                    Repository belum tersedia
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setSelectedProject(project)}
+                                                            className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 text-sm font-medium text-blue-300 transition hover:text-blue-200"
+                                                        >
+                                                            Detail
+                                                            <ArrowUpRight size={16} />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </motion.button>
+                                        </motion.article>
                                     );
                                 }
+
 
                                 const certificate = item.data;
 

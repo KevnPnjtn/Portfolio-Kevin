@@ -42,7 +42,12 @@ export const projects: Project[] = [
       "Client order and payment workflow",
       "Admin package and order management",
     ],
-
+    links: [
+      {
+        label: "Github",
+        url: "https://github.com/KevnPnjtn/Webkita_App",
+      },
+    ],
   },
   {
     id: "inventori",
@@ -58,7 +63,7 @@ export const projects: Project[] = [
       "/projects/inventori/inventori-4.png",
       "/projects/inventori/inventori-5.png",
     ],
-    techStack: [],
+    techStack: ["PHP", "Laravel", "React", "Tailwind CSS", "MySQL"],
     features: [],
   },
   {
