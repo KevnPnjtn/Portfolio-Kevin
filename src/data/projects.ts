@@ -30,7 +30,7 @@ export const projects: Project[] = [
     role: "Project team member",
     images:
       [
-        "/projects/webkita/hero-webkita.png",
+        "/projects/webkita/hero-webkita.webp",
         "/projects/webkita/webkita-1.png",
         "/projects/webkita/webkita-2.png",
         "/projects/webkita/webkita-3.png",

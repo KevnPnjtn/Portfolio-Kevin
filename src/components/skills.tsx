@@ -1,3 +1,4 @@
+
 "use client";
 
 import { MotionConfig, motion, type Variants } from "motion/react";
@@ -27,10 +28,15 @@ import {
 } from "simple-icons";
 import { CodeXml, Database, Webhook, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { GithubActivity } from "./GithubActivity";
 import { useLanguage } from "@/components/language-provider";
 
-
-type CategoryId = "languages" | "frontend" | "backend" | "database" | "tools";
+type CategoryId =
+    | "languages"
+    | "frontend"
+    | "backend"
+    | "database"
+    | "tools";
 
 type TechIcon =
     | { kind: "brand"; icon: SimpleIcon }
@@ -107,23 +113,35 @@ const MIN_CONTRAST = 3;
 
 function relativeLuminance(hex: string) {
     const value = parseInt(hex, 16);
+
     const channel = (shift: number) => {
         const c = ((value >> shift) & 255) / 255;
-        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+
+        return c <= 0.03928
+            ? c / 12.92
+            : ((c + 0.055) / 1.055) ** 2.4;
     };
-    return 0.2126 * channel(16) + 0.7152 * channel(8) + 0.0722 * channel(0);
+
+    return (
+        0.2126 * channel(16) +
+        0.7152 * channel(8) +
+        0.0722 * channel(0)
+    );
 }
 
 function readableBrandColor(hex: string): string | null {
     const a = relativeLuminance(hex);
     const b = relativeLuminance(PAGE_BACKGROUND);
-    const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    const ratio =
+        (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+
     return ratio >= MIN_CONTRAST ? `#${hex}` : null;
 }
 
 function TechLogo({ icon }: { icon: TechIcon }) {
     if (icon.kind === "generic") {
         const Icon = icon.icon;
+
         return (
             <Icon
                 aria-hidden="true"
@@ -140,7 +158,10 @@ function TechLogo({ icon }: { icon: TechIcon }) {
             aria-hidden="true"
             focusable="false"
             viewBox="0 0 24 24"
-            className={cn("size-4 shrink-0", !color && "text-foreground/80")}
+            className={cn(
+                "size-4 shrink-0",
+                !color && "text-foreground/80"
+            )}
             fill={color ?? "currentColor"}
         >
             <path d={icon.icon.path} />
@@ -152,17 +173,33 @@ const reveal = (delay = 0, y = 14) => ({
     initial: { opacity: 0, y },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, amount: 0.3 },
-    transition: { duration: 0.6, delay, ease: "easeOut" as const },
+    transition: {
+        duration: 0.6,
+        delay,
+        ease: "easeOut" as const,
+    },
 });
 
 const listVariants: Variants = {
     hidden: {},
-    show: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
+    show: {
+        transition: {
+            staggerChildren: 0.09,
+            delayChildren: 0.1,
+        },
+    },
 };
 
 const rowVariants: Variants = {
     hidden: { opacity: 0, y: 14 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    show: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.5,
+            ease: "easeOut",
+        },
+    },
 };
 
 export function Skills() {
@@ -176,20 +213,20 @@ export function Skills() {
                 className="relative overflow-hidden py-16 sm:py-20 lg:py-24"
             >
                 {/* BACKGROUND */}
-
                 <div
                     aria-hidden
                     className="pointer-events-none absolute right-[12%] top-1/3 -z-10 h-[380px] w-[380px] rounded-full bg-violet-500/[0.025] blur-[130px]"
                 />
+
                 <div
                     aria-hidden
                     className="pointer-events-none absolute left-[6%] top-[55%] -z-10 h-[320px] w-[320px] rounded-full bg-blue-500/[0.025] blur-[120px]"
                 />
 
                 <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
+                    {/* SKILLS CONTENT */}
                     <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20 xl:gap-28">
                         {/* INTRO */}
-
                         <div className="max-w-xl lg:sticky lg:top-28 lg:self-start">
                             <motion.p
                                 {...reveal(0, 10)}
@@ -229,7 +266,6 @@ export function Skills() {
                         </div>
 
                         {/* CATEGORIES */}
-
                         <motion.div
                             initial="hidden"
                             whileInView="show"
@@ -253,13 +289,17 @@ export function Skills() {
                                                 key={tech.name}
                                                 className={cn(
                                                     "inline-flex cursor-default select-none items-center gap-2 rounded-full border py-1.5 pr-3.5 text-sm transition-colors duration-200",
-                                                    tech.icon ? "pl-3" : "pl-3.5",
+                                                    tech.icon
+                                                        ? "pl-3"
+                                                        : "pl-3.5",
                                                     tech.featured
                                                         ? "border-blue-500/30 bg-blue-500/[0.06] font-medium text-foreground hover:border-blue-400/50 hover:bg-blue-500/10"
-                                                        : "border-white/[0.08] bg-white/[0.02] text-muted-foreground hover:border-white/[0.18] hover:text-foreground",
+                                                        : "border-white/[0.08] bg-white/[0.02] text-muted-foreground hover:border-white/[0.18] hover:text-foreground"
                                                 )}
                                             >
-                                                {tech.icon && <TechLogo icon={tech.icon} />}
+                                                {tech.icon && (
+                                                    <TechLogo icon={tech.icon} />
+                                                )}
                                                 {tech.name}
                                             </li>
                                         ))}
@@ -268,6 +308,9 @@ export function Skills() {
                             ))}
                         </motion.div>
                     </div>
+
+                    {/* GITHUB ACTIVITY — BELOW SKILLS, SAME SECTION */}
+                    <GithubActivity />
                 </div>
             </section>
         </MotionConfig>
