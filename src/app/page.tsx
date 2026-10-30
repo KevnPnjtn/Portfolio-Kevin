@@ -1,7 +1,6 @@
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Footer } from "@/components/footer";
-import { Loader } from "@/components/loader";
 import { About } from "@/components/about";
 import { Skills } from "@/components/skills";
 import { Projects } from "@/components/projects";
@@ -9,7 +8,6 @@ import { Projects } from "@/components/projects";
 export default function Home() {
     return (
         <>
-            <Loader />
 
             <Navbar />
 
